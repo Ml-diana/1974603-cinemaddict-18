@@ -1,7 +1,7 @@
 # Проект «Киноман»
 
 * Студент: [Диана Бескоровайнова](https://up.htmlacademy.ru/ecmascript/18/user/1974603).
-* Наставник: `Неизвестно`.
+* Наставник: [Rail Sakhaviev](https://htmlacademy.ru/profile/id1331891).
 
 ---
 
