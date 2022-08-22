@@ -1,12 +1,11 @@
 //`${function(param)}`
-//import dayjs from 'dayjs';
 import { getRandomInteger, getRandomValue} from '../utils';
 import {FILM_COUNT, title, poster, genre, description, name,surname, AgeRating, Rating, countries} from './const.js';
 
 export const generateStandardCardFilm = () => ({
   'title': getRandomValue(title),
   'alternativeTitle': getRandomValue(title),
-  'totalRating': getRandomInteger(Rating),
+  'totalRating': getRandomInteger(Rating.MIN, Rating.MAX),
   'poster': getRandomValue(poster),
   'ageRating': getRandomInteger(AgeRating.MIN, AgeRating.MAX),
   'director': `${getRandomValue(name)} ${getRandomValue(surname)}`,
@@ -33,7 +32,7 @@ const generateFilms = () => {
 
     return {
       id: String(index + 1),
-      comment: (hasComments) ? Array.from ({length: filmQuantityComments}, (_value, commentIndex) => String(fullQuantityComments - commentIndex)) // id comments
+      comment: (hasComments) ? Array.from ({length: filmQuantityComments}, (_value, commentIndex) => String(fullQuantityComments - commentIndex))
         : [],
       filmInfo: film
     };

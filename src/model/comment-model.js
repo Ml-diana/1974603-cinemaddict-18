@@ -13,14 +13,17 @@ export default class CommentsModel {
 
 
   generateAllComments() {
-    this.allComments = generateComments(this.filmsModel.get());
+    this.allComments = generateComments(this.filmsModel.films);
   }
 
   get = (film) => {
-    this.comments = film.comments.map((commentId) =>
+    this.comments = film.comment.map((commentId) =>
       this.allComments.find((comment) =>
         comment.id === commentId)
     );
-    return this.comments;
+    return this.comments; //array with id
+
   };
 }
+
+

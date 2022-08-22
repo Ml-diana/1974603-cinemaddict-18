@@ -1,6 +1,12 @@
-import {generateFilms} from '../mock/film-data.js';
-
 export default class FilmsModel {
-  films = generateFilms();
-  get = () => this.films;
+  #films = null;
+
+  set films(films) {
+    this.#films = films;
+  }
+
+  get films() {
+    return this.#films;
+  }
+
 }

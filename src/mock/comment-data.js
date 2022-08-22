@@ -1,15 +1,14 @@
-import dayjs from 'dayjs';
 import {getRandomValue} from '../utils.js';
-import { comment, emotion ,name, surname} from './const.js';
+import {comment, emotion ,name, surname} from './const.js';
 
 const generateComment = () => ({
-  'author': Array.from({length: 2}, () => `${getRandomValue(name)} ${getRandomValue(surname)}`),
+  'author': Array.from({length: 1}, () => `${getRandomValue(name)} ${getRandomValue(surname)}`),
   'comment': getRandomValue(comment),
-  'data':  dayjs().toISOString,
+  'date': '2019-05-11T16:12:32.554Z',
   'emotion': getRandomValue(emotion)
 });
 
-const getCommentQuantity = (films) => films.reduce((count, film) => count + film.length, 0);
+const getCommentQuantity = (films) => films.reduce((count, film) => count + film.comment.length, 0);
 const generateComments = (films) => {
   const commentCount = getCommentQuantity(films);
 
