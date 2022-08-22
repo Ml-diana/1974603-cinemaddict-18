@@ -17,18 +17,18 @@ export default class FilmsListView {
 
   getElement() {
     if (!this.element) {
-      this.element = createElement(this.getTemplate());//extra
+      this.element = createElement(this.getTemplate());
     }
 
     return this.element;
   }
 
   getFilmsListContainerElement() {
-    return this.getElement().querySelector('.films-list__container');//фильмы
+    return this.getElement().querySelector('.films-list__container');
   }
 
   getFilmsListElement() {
-    return this.getElement().querySelector('.films-list'); //show more button
+    return this.getElement().querySelector('.films-list');
   }
 
   removeElement() {

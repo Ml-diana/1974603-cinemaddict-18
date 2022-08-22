@@ -12,7 +12,7 @@ const generateGenreList = (genres) =>
     `<span class="film-details__genre">${genreItem}</span>`).join('');
 
 
-const createPopupTemplate = (film, comments) => (
+const createFilmDetailsTemplate = (film, comments) => (
 
   `<section class="film-details">
   <div class="film-details__inner">
@@ -103,7 +103,7 @@ export default class FilmDetailsView {
   }
 
   getTemplate() {
-    return createPopupTemplate(this.film, this.comments);
+    return createFilmDetailsTemplate(this.film, this.comments);
   }
 
   getElement() {
