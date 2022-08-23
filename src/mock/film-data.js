@@ -1,4 +1,3 @@
-//`${function(param)}`
 import { getRandomInteger, getRandomValue} from '../utils';
 import {FILM_COUNT, title, poster, genre, description, name,surname, AgeRating, Rating, countries} from './const.js';
 

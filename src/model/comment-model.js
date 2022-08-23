@@ -21,7 +21,7 @@ export default class CommentsModel {
       this.allComments.find((comment) =>
         comment.id === commentId)
     );
-    return this.comments; //array with id
+    return this.comments;
 
   };
 }
