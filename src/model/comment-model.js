@@ -2,8 +2,8 @@ import {generateComments} from '../mock/comment-data.js';
 
 export default class CommentsModel {
   filmsModel = null;
-  allComments = [];
-  comments = [];
+  #allComments = [];
+  #comments = [];
 
 
   constructor(filmsModel) {
@@ -13,15 +13,15 @@ export default class CommentsModel {
 
 
   generateAllComments() {
-    this.allComments = generateComments(this.filmsModel.films);
+    this.#allComments = generateComments(this.filmsModel.films);
   }
 
   get = (film) => {
-    this.comments = film.comment.map((commentId) =>
-      this.allComments.find((comment) =>
+    this.#comments = film.comment.map((commentId) =>
+      this.#allComments.find((comment) =>
         comment.id === commentId)
     );
-    return this.comments;
+    return this.#comments;
 
   };
 }
