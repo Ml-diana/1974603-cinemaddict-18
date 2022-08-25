@@ -17,11 +17,10 @@ const filmsModel = new FilmsModel();
 filmsModel.films = generateFilms();
 
 const commentsModel = new CommentsModel(filmsModel);
-const filmsPresenter = new FilmsPresenter();
-
+const filmsPresenter = new FilmsPresenter(siteMainElement, filmsModel, commentsModel);
 render(new ProfileNameView(), siteHeaderElement);
 render(new NavigationListView(), siteMainElement);
 render(new SortButtonView(), siteMainElement);
 render(new StatisticsView(), siteFooterElement);
 
-filmsPresenter.init(siteMainElement, filmsModel, commentsModel);
+filmsPresenter.init();

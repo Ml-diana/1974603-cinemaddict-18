@@ -21,5 +21,7 @@ const generateComments = (films) => {
     };
   });
 };
+
+
 export {generateComments};
 

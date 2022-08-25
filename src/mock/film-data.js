@@ -36,5 +36,7 @@ const generateFilms = () => {
       filmInfo: film
     };
   });
+
 };
+
 export {generateFilms};
