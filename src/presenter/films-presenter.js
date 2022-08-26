@@ -5,7 +5,6 @@ import MostCommentedFilmsListView from '../view/most-commented-films-list.js';
 import ShowMoreButtonView from '../view/show-more-button.js';
 import {render} from '../render.js';
 import FilmDetailsView from '../view/film-details-view.js';
-//import FilmDetailsView from '../view/film-details-view.js';
 
 export default class FilmsPresenter {
   #cinemaContainer = null;
@@ -40,7 +39,7 @@ export default class FilmsPresenter {
 
 
     const closeFilmDetails = () => {
-      document.body.removeChild(filmDetailsComponent.element);
+      filmDetailsComponent.element.remove();
       filmDetailsComponent.element.classList.remove('hide-overflow');
     };
 
@@ -53,7 +52,7 @@ export default class FilmsPresenter {
     };
 
     const openFilmDetails = () => {
-      document.body.appendChild(filmDetailsComponent.element);
+      document.body.append(filmDetailsComponent.element);
       filmDetailsComponent.element.classList.add('hide-overflow');
       document.addEventListener('keydown', onEscKeyDown);
       filmDetailsComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
