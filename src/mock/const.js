@@ -12,13 +12,13 @@ const AgeRating = {
 
 const FILM_COUNT = 20;
 
-const name = [
+const names = [
   'John',
   'Tim',
   'Tom'
 ];
 
-const surname = [
+const surnames = [
   'Doe',
   'Macoveev',
   'Smith'
@@ -30,13 +30,13 @@ const countries = [
   'Finland'
 ];
 
-const comment = [
+const comments = [
   'Interesting setting and a good cast',
   'Booooooooooring',
   'Very very old. Meh'
 ];
-const emotion = ['smile', 'sleeping', 'puke', 'angry'];
-const title = [
+const emotions = ['smile', 'sleeping', 'puke', 'angry'];
+const titles = [
   'The Dance of Life',
   'Sagebrush Trail',
   'The Man with the Golden Arm',
@@ -46,7 +46,7 @@ const title = [
   'Made for Each Other'
 ];
 
-const totalRating = [
+const totalRatings = [
   '8.3',
   '3.2',
   '9.0',
@@ -56,7 +56,7 @@ const totalRating = [
   '5.8'
 ];
 
-const poster = [
+const posters = [
   'images/posters/the-dance-of-life.jpg',
   'images/posters/sagebrush-trail.jpg',
   'images/posters/the-man-with-the-golden-arm.jpg',
@@ -65,7 +65,7 @@ const poster = [
   'images/posters/the-great-flamarion.jpg',
   'images/posters/made-for-each-other.png',
 ];
-const genre = [
+const genres = [
   'Musical',
   'Western',
   'Drama',
@@ -75,7 +75,7 @@ const genre = [
   'Comedy'
 ];
 
-const description = [
+const descriptions = [
   'Burlesque comic Ralph "Skid" Johnson (Skelly), and specialty dancer Bonny Lee King (Carroll), end up together on a cold, rainy night at a tr…',
   'Frankie Machine (Frank Sinatra) is released from the federal Narcotic Farm in Lexington, Kentucky with a set of drums and a new outlook on…',
   'The Martians Momar ("Mom Martian") and Kimar ("King Martian") are worried that their children Girmar ("Girl Martian") and Bomar ("Boy Marti…',
@@ -84,4 +84,4 @@ const description = [
   'John Mason (James Stewart) is a young, somewhat timid attorney in New York City. He has been doing his job well, and he has a chance of bei…'
 ];
 
-export {FILM_COUNT, countries, emotion, title, totalRating, poster, genre, description, MAX_COMMENTS, name,surname, AgeRating, Rating, comment};
+export {FILM_COUNT, countries, emotions, titles, totalRatings, posters, genres, descriptions, MAX_COMMENTS, names, surnames, AgeRating, Rating, comments};
