@@ -1,22 +1,22 @@
 import { getRandomInteger, getRandomValue} from '../utils';
-import {FILM_COUNT, title, poster, genre, description, name,surname, AgeRating, Rating, countries} from './const.js';
+import {FILM_COUNT, titles, posters, genres, descriptions, names,surnames, AgeRating, Rating, countries} from './const.js';
 
 export const generateStandardCardFilm = () => ({
-  'title': getRandomValue(title),
-  'alternativeTitle': getRandomValue(title),
+  'title': getRandomValue(titles),
+  'alternativeTitle': getRandomValue(titles),
   'totalRating': getRandomInteger(Rating.MIN, Rating.MAX),
-  'poster': getRandomValue(poster),
+  'poster': getRandomValue(posters),
   'ageRating': getRandomInteger(AgeRating.MIN, AgeRating.MAX),
-  'director': `${getRandomValue(name)} ${getRandomValue(surname)}`,
-  'writers': Array.from({length: 2}, () => `${getRandomValue(name)} ${getRandomValue(surname)}`),
-  'actors': Array.from({length: 2}, () => `${getRandomValue(name)} ${getRandomValue(surname)}`),
+  'director': `${getRandomValue(names)} ${getRandomValue(surnames)}`,
+  'writers': Array.from({length: 2}, () => `${getRandomValue(names)} ${getRandomValue(surnames)}`),
+  'actors': Array.from({length: 2}, () => `${getRandomValue(names)} ${getRandomValue(surnames)}`),
   'release': {
     'date': '2019-05-11T00:00:00.000Z',
     'releaseCountry': getRandomValue(countries),
   },
   'runtime': 77,
-  'genre': Array.from({length:3}, () => `${getRandomValue(genre)}`),
-  'description': getRandomValue(description)
+  'genre': Array.from({length:3}, () => `${getRandomValue(genres)}`),
+  'description': getRandomValue(descriptions)
 
 });
 
