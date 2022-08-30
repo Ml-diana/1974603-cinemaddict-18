@@ -14,6 +14,10 @@ export default class StatisticsView {
     return this.element;
   }
 
+  getStatisticsElement() {
+    return this.getElement().querySelector('.footer__statistics'); //statistics
+  }
+
   removeElement() {
     this.element = null;
   }
