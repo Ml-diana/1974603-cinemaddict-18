@@ -1,5 +1,6 @@
 import {getRandomValue} from '../utils.js';
-import {comments, emotions ,names, surnames} from './const.js';
+
+import {comments, emotions, names, surnames} from './const.js';
 
 const generateComment = () => ({
   'author': Array.from({length: 1}, () => `${getRandomValue(names)} ${getRandomValue(surnames)}`),

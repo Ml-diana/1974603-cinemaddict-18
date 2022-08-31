@@ -84,4 +84,6 @@ const descriptions = [
   'John Mason (James Stewart) is a young, somewhat timid attorney in New York City. He has been doing his job well, and he has a chance of bei…'
 ];
 
-export {FILM_COUNT, countries, emotions, titles, totalRatings, posters, genres, descriptions, MAX_COMMENTS, names,surnames, AgeRating, Rating, comments};
+
+export {FILM_COUNT, countries, emotions, titles, totalRatings, posters, genres, descriptions, MAX_COMMENTS, names, surnames, AgeRating, Rating, comments};
+
