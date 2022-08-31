@@ -61,6 +61,7 @@ export default class FilmsPresenter {
     const closeFilmDetails = () => {
       filmDetailsComponent.element.remove();
       document.body.classList.remove('hide-overflow');
+
     };
 
     const onEscKeyDown = (evt) => {
@@ -74,6 +75,7 @@ export default class FilmsPresenter {
     const openFilmDetails = () => {
       document.body.append(filmDetailsComponent.element);
       document.body.classList.add('hide-overflow');
+
       document.addEventListener('keydown', onEscKeyDown);
       filmDetailsComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
         closeFilmDetails();

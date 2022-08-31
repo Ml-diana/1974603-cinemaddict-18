@@ -24,12 +24,14 @@ export const createFilmCardTemplate = (film) =>
 
 export default class FilmCardView {
   #element = null;
+  #film = null;
+
   constructor(film) {
-    this.film = film;
+    this.#film = film;
   }
 
   get template() {
-    return createFilmCardTemplate(this.film);
+    return createFilmCardTemplate(this.#film);
   }
 
   get element() {
