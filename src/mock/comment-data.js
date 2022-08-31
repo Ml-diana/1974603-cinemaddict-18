@@ -1,4 +1,5 @@
 import {getRandomValue} from '../utils.js';
+
 import {comments, emotions, names, surnames} from './const.js';
 
 const generateComment = () => ({

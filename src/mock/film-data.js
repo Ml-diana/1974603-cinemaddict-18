@@ -1,5 +1,7 @@
 import { getRandomInteger, getRandomValue} from '../utils';
+
 import {FILM_COUNT, titles, posters, genres, descriptions, names, surnames, AgeRating, Rating, countries} from './const.js';
+
 
 export const generateStandardCardFilm = () => ({
   'title': getRandomValue(titles),
