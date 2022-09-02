@@ -1,11 +1,11 @@
-import {getRandomValue} from '../utils.js';
+import {getRandomArrayElement} from '../utils.js';
 import {comments, emotions, names, surnames} from './const.js';
 
 const generateComment = () => ({
-  'author': Array.from({length: 1}, () => `${getRandomValue(names)} ${getRandomValue(surnames)}`),
-  'comment': getRandomValue(comments),
+  'author': Array.from({length: 1}, () => `${getRandomArrayElement(names)} ${getRandomArrayElement(surnames)}`),
+  'comment': getRandomArrayElement(comments),
   'date': '2019-05-11T16:12:32.554Z',
-  'emotion': getRandomValue(emotions)
+  'emotion': getRandomArrayElement(emotions)
 });
 
 const getCommentQuantity = (films) => films.reduce((count, film) => count + film.comment.length, 0);

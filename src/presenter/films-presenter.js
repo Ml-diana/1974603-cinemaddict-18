@@ -37,7 +37,6 @@ export default class FilmsPresenter {
     render(filmCardComponent, this.#filmListComponent.filmsListContainerElement);
     render(this.#topRatedFilmsListComponent, this.#filmListComponent.element);
     render(this.#mostCommentedFilmsListComponent, this.#filmListComponent.element);
-
   };
 
   #handleShowMoreButtonClick = (evt) => {
@@ -75,21 +74,18 @@ export default class FilmsPresenter {
     const openFilmDetails = () => {
       document.body.append(filmDetailsComponent.element);
       document.body.classList.add('hide-overflow');
-
       document.addEventListener('keydown', onEscKeyDown);
       filmDetailsComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
         closeFilmDetails();
       });
     };
 
-    const filmCards = document.querySelectorAll('.film-card');
-
-    for (const card of filmCards) {
+    const filmCard = document.querySelectorAll('.film-card');
+    for (const card of filmCard) {
       card.addEventListener('click', () => {
         openFilmDetails();
       });
     }
-
   };
 
   #renderMovieSite = () => {
