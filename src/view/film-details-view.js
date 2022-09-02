@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { formatDate, formatMinutes } from '../utils';
 import {createFilmCommentTemplate} from './film-details-comment-view.js';
 import {createFilmCommentEmojiTemplate} from './film-details-emoji-list-view.js';
@@ -96,26 +96,35 @@ const createFilmDetailsTemplate = (film, comments) => (
 `
 );
 
-export default class FilmDetailsView {
-  #element = null;
+export default class FilmDetailsView extends AbstractView {
+  #film = null;
+  #comments = null;
   constructor(film, comments) {
-    this.film = film;
-    this.comments = comments;
+    super();
+    this.#film = film;
+    this.#comments = comments;
   }
 
   get template() {
-    return createFilmDetailsTemplate(this.film, this.comments);
+    return createFilmDetailsTemplate(this.#film, this.#comments);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setCloseClickHandler = (callback) => {
+    this._callback.closeClick = callback;
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closeClickHandler);
+  };
 
-    return this.#element;
-  }
+  #closeClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.closeClick();
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  setClickCardHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.addEventListener('click', this.#clickCardHandler);
+  };
+
+  #clickCardHandler = () => {
+    this._callback.click();
+  };
 }
