@@ -10,7 +10,7 @@ const AgeRating = {
   MAX: 18
 };
 
-const FILM_COUNT = 5;
+const FILM_COUNT = 20;
 
 const names = [
   'John',
