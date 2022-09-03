@@ -1,4 +1,3 @@
-//import AbstractView from '/src/framework/view/abstract-view.js';
 import AbstractView from '../framework/view/abstract-view.js';
 import {formatDateWithYear, formatMinutes} from '../utils.js';
 
