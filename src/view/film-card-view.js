@@ -9,7 +9,7 @@ export const createFilmCardTemplate = (film) =>
   <p class="film-card__info">
     <span class="film-card__year">${formatDateWithYear(film.filmInfo.release.date)}</span>
     <span class="film-card__duration">${formatMinutes(film.filmInfo.runtime)}</span>
-    <span class="film-card__genre">${film.filmInfo.genre[0]}</span>
+    <span class="film-card__genre">${film.filmInfo.genres[0]}</span>
   </p>
   <img src="${film.filmInfo.poster}" alt="" class="film-card__poster">
   <p class="film-card__description">${film.filmInfo.description}</p>
@@ -39,7 +39,7 @@ export default class FilmCardView extends AbstractView {
   };
 
   #clickCardHandler = () => {
-    this._callback.click();
+    this._callback.click(this.#film);
   };
 }
 
