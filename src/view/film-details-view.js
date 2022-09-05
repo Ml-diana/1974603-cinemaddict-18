@@ -1,16 +1,5 @@
-import {createElement} from '../render.js';
-import { formatDate, formatMinutes } from '../utils';
-import {createFilmCommentTemplate} from './film-details-comment-view.js';
-import {createFilmCommentEmojiTemplate} from './film-details-emoji-list-view.js';
-const generateGenreTitle = (genres) =>
-  (genres.length > 1)
-    ? 'Genres'
-    : 'Genre';
-
-const generateGenreList = (genres) =>
-  genres.map((genreItem) =>
-    `<span class="film-details__genre">${genreItem}</span>`).join('');
-
+import AbstractView from '../framework/view/abstract-view.js';
+import { formatDate, formatMinutes, formatFullDate} from '../utils';
 
 const createFilmDetailsTemplate = (film, comments) => (
 
@@ -65,9 +54,9 @@ const createFilmDetailsTemplate = (film, comments) => (
         <td class="film-details__cell">${film.filmInfo.release.releaseCountry}</td>
       </tr>
       <tr class="film-details__row">
-        <td class="film-details__term">${generateGenreTitle(film.filmInfo.genre)}</td>
+      <td class="film-details__term">${film.filmInfo.genres.length > 1 ? 'Genres' : 'Genre'}</td>
         <td class="film-details__cell">
-        ${generateGenreList(film.filmInfo.genre)}
+        ${film.filmInfo.genres.map((genreItem) => `<span class="film-details__genre">${genreItem}</span>`).join('')}
           </td>
       </tr>
     </table>
@@ -87,8 +76,35 @@ const createFilmDetailsTemplate = (film, comments) => (
 <div class="film-details__bottom-container">
       <section class="film-details__comments-wrap">
         <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comment.length}</span></h3>
-        ${createFilmCommentTemplate(comments)}
-        ${createFilmCommentEmojiTemplate(comments)}
+        <ul class="film-details__comments-list">
+        ${comments.map((item) =>`<li class="film-details__comment">
+        <span class="film-details__comment-emoji">
+          <img src="./images/emoji/${item.emotion}.png" width="55" height="55" alt="emoji-${item.emotion}">
+        </span>
+        <div>
+          <p class="film-details__comment-text">${item.comment}</p>
+          <p class="film-details__comment-info">
+            <span class="film-details__comment-author">${item.author}</span>
+            <span class="film-details__comment-day">${formatFullDate(item.date)}</span>
+            <button class="film-details__comment-delete">Delete</button>
+          </p>
+        </div>
+      </li>`).join('')}
+      </ul>
+
+    <form class="film-details__new-comment" action="" method="get">
+      <div class="film-details__add-emoji-label"></div>
+
+      <label class="film-details__comment-label">
+        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+      </label>
+        ${comments.map((item) =>`<div class="film-details__emoji-list">
+        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${item.emotion}" value="${item.emotion}">
+        <label class="film-details__emoji-label" for="emoji-${item.emotion}">
+          <img src="./images/emoji/${item.emotion}.png" width="30" height="30" alt="${item.emotion}">
+        </label>
+      </div>`).join('')}
+      </form>
       </section>
     </div>
   </div>
@@ -96,26 +112,27 @@ const createFilmDetailsTemplate = (film, comments) => (
 `
 );
 
-export default class FilmDetailsView {
-  #element = null;
+export default class FilmDetailsView extends AbstractView {
+  #film = null;
+  #comments = null;
   constructor(film, comments) {
-    this.film = film;
-    this.comments = comments;
+    super();
+    this.#film = film;
+    this.#comments = comments;
   }
 
   get template() {
-    return createFilmDetailsTemplate(this.film, this.comments);
+    return createFilmDetailsTemplate(this.#film, this.#comments);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setCloseClickHandler = (callback) => {
+    this._callback.closeClick = callback;
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closeClickHandler);
+  };
 
-    return this.#element;
-  }
+  #closeClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.closeClick();
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
 }

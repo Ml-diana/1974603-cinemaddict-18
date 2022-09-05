@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {formatDateWithYear, formatMinutes} from '../utils.js';
 
 export const createFilmCardTemplate = (film) =>
@@ -9,7 +9,7 @@ export const createFilmCardTemplate = (film) =>
   <p class="film-card__info">
     <span class="film-card__year">${formatDateWithYear(film.filmInfo.release.date)}</span>
     <span class="film-card__duration">${formatMinutes(film.filmInfo.runtime)}</span>
-    <span class="film-card__genre">${film.filmInfo.genre[0]}</span>
+    <span class="film-card__genre">${film.filmInfo.genres[0]}</span>
   </p>
   <img src="${film.filmInfo.poster}" alt="" class="film-card__poster">
   <p class="film-card__description">${film.filmInfo.description}</p>
@@ -22,11 +22,10 @@ export const createFilmCardTemplate = (film) =>
 </div>
 </article>`;
 
-export default class FilmCardView {
-  #element = null;
+export default class FilmCardView extends AbstractView {
   #film = null;
-
   constructor(film) {
+    super();
     this.#film = film;
   }
 
@@ -34,16 +33,13 @@ export default class FilmCardView {
     return createFilmCardTemplate(this.#film);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setClickCardHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.addEventListener('click', this.#clickCardHandler);
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #clickCardHandler = () => {
+    this._callback.click(this.#film);
+  };
 }
 

@@ -17,4 +17,5 @@ const formatDate = (date) => dayjs(date).format('DD MMMM YYYY');
 const formatFullDate = (date) => dayjs(date).format('YYYY/MM/DD hh:mm');
 const formatMinutes = (minutes) => dayjs.duration(minutes, 'minutes').format('H[h] mm[m]');
 
+export const isEscape = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 export {getRandomInteger, formatDate, formatFullDate, formatMinutes, getRandomArrayElement,formatDateWithYear};

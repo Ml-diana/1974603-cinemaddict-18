@@ -3,7 +3,7 @@ import NavigationListView from './view/navigation-list-view.js';
 import ProfileNameView from './view/profile-name-view';
 import FilmsPresenter from './presenter/films-presenter.js';
 import StatisticsView from './view/statistics-view.js';
-import {render} from './render.js';
+import {render} from './framework/render.js';
 import FilmsModel from './model/film-model.js';
 import CommentsModel from './model/comment-model.js';
 import { generateFilms } from './mock/film-data.js';

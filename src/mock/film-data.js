@@ -15,7 +15,7 @@ export const generateStandardCardFilm = () => ({
     'releaseCountry': getRandomArrayElement(countries),
   },
   'runtime': 77,
-  'genre': Array.from({length:3}, () => `${getRandomArrayElement(genres)}`),
+  'genres': Array.from({length:3}, () => `${getRandomArrayElement(genres)}`),
   'description': getRandomArrayElement(descriptions)
 
 });
