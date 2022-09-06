@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { formatDate, formatMinutes, formatFullDate} from '../utils';
+import {formatDate, formatMinutes, formatFullDate} from '../utils';
 
 const createFilmDetailsTemplate = (film, comments) => (
 
@@ -135,4 +135,14 @@ export default class FilmDetailsView extends AbstractView {
     this._callback.closeClick();
   };
 
+  setClickControlHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.film-details__controls').addEventListener('click', this.#clickControlHandler);
+  };
+
+  #clickControlHandler = (evt) => {
+    if (evt.target.id) {
+      this._callback.click(evt.target.id);
+    }
+  };
 }

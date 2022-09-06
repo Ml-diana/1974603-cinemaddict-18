@@ -4,17 +4,24 @@ import FilmCardView from '../view/film-card-view.js';
 import MostCommentedFilmsListView from '../view/most-commented-films-list-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import {render, remove} from '../framework/render.js';
-import FilmDetailsView from '../view/film-details-view.js';
 import NoFilmView from '../view/no-film-view.js';
-import {isEscape} from '../utils.js';
+import NavigationListView from '../view/navigation-list-view.js';
+import FilmDetailsPresenter from './film-details-presenter.js';
+import SortButtonView from '../view/sort-button-view.js';
 
 const ONE_PART_OF_THE_FILMS = 5;
-
+const siteMainElement = document.querySelector('.main');
+/*const filterType = {
+  ALL: 'all',
+  WATCHLIST: 'watchlist',
+  HISTORY:'history',
+  FAVORITES:'favorites'
+};
+*/
 export default class FilmsPresenter {
   #cinemaContainer = null;
   #filmsModel = null;
   #commentsModel = null;
-  #filmDetailsComponent = null;
   #films = [];
   #renderedFilmCount = ONE_PART_OF_THE_FILMS;
   #filmListComponent = new FilmsListView();
@@ -35,6 +42,8 @@ export default class FilmsPresenter {
   };
 
   #renderFilms = () => {
+    this.#renderNavigationList();
+    this.#renderSortingList();
     render(this.#filmListComponent, this.#cinemaContainer);
 
     if (this.#films.length === 0) {
@@ -51,39 +60,34 @@ export default class FilmsPresenter {
       render(this.#showMoreButtonComponent, this.#filmListComponent.filmsListElement);
       this.#showMoreButtonComponent.setClickHandler(this.#handleShowMoreButtonClick);
     }
+
+  };
+
+  #renderNavigationList = () => {
+    const navigationList = new NavigationListView();
+    render(navigationList, siteMainElement);
+    navigationList.setNavigationClickHandler(this.#handleFiltersClickHandler);
+  };
+
+  #renderSortingList = () => {
+    const sortButton = new SortButtonView();
+    render(sortButton, siteMainElement);
+    sortButton.setSortingClickHandler(this.#handleSortingButtonClickHandler);
   };
 
   #renderFilmCard = (film) => {
     const filmCardComponent = new FilmCardView(film);
     render(filmCardComponent, this.#filmListComponent.filmsListContainerElement);
-    filmCardComponent.setClickCardHandler(this.#handleCardClickHandler);
+    filmCardComponent.setCardControlsClickHandler(this.#handleCardControlsClickHandler);
+    filmCardComponent.setClickCardHandler(this.#renderFilmDetails);
   };
 
-  #handleCardClickHandler = (film) => {
-    document.body.classList.add('hide-overflow');
-    document.addEventListener('keydown', this.#handleEscKeyDown);
+  #renderFilmDetails = (film) => {
+    const filmDetailsPresenter = new FilmDetailsPresenter(document.body);
     const comments = [...this.#commentsModel.get(film)];
-    this.#filmDetailsComponent = new FilmDetailsView(film, comments);
-    this.#filmDetailsComponent.setCloseClickHandler(this.#handleCardDetailsCloseClick);
-    document.body.append(this.#filmDetailsComponent.element);
+    filmDetailsPresenter.init(film,comments);
   };
 
-  #handleCardDetailsCloseClick = () => {
-    this.#closeFilmDetails();
-  };
-
-  #closeFilmDetails = () => {
-    document.body.classList.remove('hide-overflow');
-    document.removeEventListener('keydown', this.#handleEscKeyDown);
-    this.#filmDetailsComponent.element.remove();
-  };
-
-  #handleEscKeyDown = (evt) => {
-    if (isEscape(evt)) {
-      evt.preventDefault();
-      this.#closeFilmDetails();
-    }
-  };
 
   #handleShowMoreButtonClick = () => {
     this.#films
@@ -97,4 +101,43 @@ export default class FilmsPresenter {
     }
   };
 
+  #handleFiltersClickHandler = (filter) => {
+    switch (filter) {
+      case ('all'):
+    }
+    switch (filter) {
+      case ('watchlist'):
+    }
+    switch (filter) {
+      case ('history'):
+    }
+    switch (filter) {
+      case ('favorites'):
+    }
+  };
+
+  #handleSortingButtonClickHandler = (sortingType) => {
+    switch (sortingType) {
+      case ('sort-by-default'):
+    }
+    switch (sortingType) {
+      case ('sort-by-date'):
+    }
+    switch (sortingType) {
+      case ('sort-by-rating'):
+    }
+  };
+
+
+  #handleCardControlsClickHandler = (cardControls) => {
+    switch (cardControls) {
+      case ('add-to-watchlist'):
+    }
+    switch (cardControls) {
+      case ('mark-as-watched'):
+    }
+    switch (cardControls) {
+      case ('favorite'):
+    }
+  };
 }

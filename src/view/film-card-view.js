@@ -16,9 +16,9 @@ export const createFilmCardTemplate = (film) =>
   <span class="film-card__comments">${film.comment.length} comments</span>
 </a>
 <div class="film-card__controls">
-<button class="film-card__controls-item film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
-<button class="film-card__controls-item film-card__controls-item--mark-as-watched" type="button">Mark as watched</button>
-<button class="film-card__controls-item film-card__controls-item--favorite" type="button">Mark as favorite</button>
+<button class="film-card__controls-item film-card__controls-item--add-to-watchlist" data-filter-type="add-to-watchlist" type="button">Add to watchlist</button>
+<button class="film-card__controls-item film-card__controls-item--mark-as-watched" data-filter-type="mark-as-watched" type="button">Mark as watched</button>
+<button class="film-card__controls-item film-card__controls-item--favorite" data-filter-type="favorite" type="button">Mark as favorite</button>
 </div>
 </article>`;
 
@@ -40,6 +40,17 @@ export default class FilmCardView extends AbstractView {
 
   #clickCardHandler = () => {
     this._callback.click(this.#film);
+  };
+
+  setCardControlsClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.addEventListener('click', this.#clickCardControlsHandler);
+  };
+
+  #clickCardControlsHandler = (evt) => {
+    if (evt.target.dataset.filterType) {
+      this._callback.click(evt.target.dataset.filterType);
+    }
   };
 }
 
