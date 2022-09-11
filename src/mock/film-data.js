@@ -1,7 +1,9 @@
-import { getRandomInteger, getRandomArrayElement} from '../utils';
+import {getRandomInteger, getRandomArrayElement} from '../utils/utils.js';
 import {FILM_COUNT, titles, posters, genres, descriptions, names, surnames, AgeRating, Rating, countries} from './const.js';
+import {nanoid} from 'nanoid';
 
 export const generateStandardCardFilm = () => ({
+  'id': nanoid(),
   'title': getRandomArrayElement(titles),
   'alternativeTitle': getRandomArrayElement(titles),
   'totalRating': getRandomInteger(Rating.MIN, Rating.MAX),
@@ -16,8 +18,13 @@ export const generateStandardCardFilm = () => ({
   },
   'runtime': 77,
   'genres': Array.from({length:3}, () => `${getRandomArrayElement(genres)}`),
-  'description': getRandomArrayElement(descriptions)
-
+  'description': getRandomArrayElement(descriptions),
+  'userDetails': {
+    'watchlist':  getRandomInteger (0,1) === 1,
+    'alreadyWatched':  getRandomInteger (0,1) === 1,
+    'watchingDate': '2019-04-12T16:12:32.554Z',
+    'favorite':  getRandomInteger (0,1) === 1
+  }
 });
 
 const generateFilms = () => {
@@ -38,5 +45,5 @@ const generateFilms = () => {
   });
 
 };
-
 export {generateFilms};
+

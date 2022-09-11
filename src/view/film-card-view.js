@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {formatDateWithYear, formatMinutes} from '../utils.js';
+import {formatDateWithYear, formatMinutes} from '../utils/utils.js';
 
 export const createFilmCardTemplate = (film) =>
   `<article class="film-card">
