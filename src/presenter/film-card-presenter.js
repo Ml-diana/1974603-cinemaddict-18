@@ -1,18 +1,18 @@
 import FilmCardView from '../view/film-card-view.js';
-import FilmDetailsPresenter from './film-details-presenter.js';
-import {render, remove} from '../framework/render.js';
+import {render, remove, replace} from '../framework/render.js';
 
 
 export default class FilmCardPresenter {
-  #film = [];
+  #film = null;
   #filmListComponent = null;
   #changeData = null;
   #commentsModel = null;
   #filmCardComponent = null;
-  #filmDetailsPresenter = new Map();
+  #filmDetailsPresenter = null;
 
-  constructor(filmListComponent, changeData) {
+  constructor(filmListComponent, filmDetailsPresenter, changeData) {
     this.#filmListComponent = filmListComponent;
+    this.#filmDetailsPresenter = filmDetailsPresenter;
     this.#changeData = changeData;
   }
 
@@ -23,15 +23,19 @@ export default class FilmCardPresenter {
   };
 
   #renderFilmCard = (film) => {
-    this.#clearFilmDetailsList();
     const prevFilmCardComponent = this.#filmCardComponent;
     this.#filmCardComponent = new FilmCardView(film);
-    this.#filmCardComponent.setCardControlsClickHandler(this.#handleCardControlsClickHandler);
+    this.#filmCardComponent.setAddToWatchlistClickHandler(this.#handleAddToWatchlistClickHandler);
+    this.#filmCardComponent.setAlreadyWatchedClickHandler(this.#handleAlreadyWatchedClickHandler);
+    this.#filmCardComponent.setAddToFavoritesClickHandler(this.#handleAddToFavoritesClickHandler);
     this.#filmCardComponent.setClickCardHandler(this.#renderFilmDetails);
     if (prevFilmCardComponent === null) {
       render(this.#filmCardComponent, this.#filmListComponent);
+      return;
     }
+    replace(this.#filmCardComponent, prevFilmCardComponent);
     remove(prevFilmCardComponent);
+    //this.#clearFilmDetailsList();
   };
 
   destroy = () => {
@@ -39,23 +43,22 @@ export default class FilmCardPresenter {
   };
 
   #renderFilmDetails = (film) => {
-    const filmDetailsPresenter = new FilmDetailsPresenter(document.body, this.#handleModeChange);
     const comments = [...this.#commentsModel.get(film)];
-    filmDetailsPresenter.init(film,comments);
-    this.#filmDetailsPresenter.set(film.id, filmDetailsPresenter);
+    this.#filmDetailsPresenter.init(film,comments);
   };
 
-  #handleModeChange = () => {
-    this.#filmDetailsPresenter.forEach((presenter) => presenter.resetView());
-  };
-
-  #clearFilmDetailsList = () => {
-    this.#filmDetailsPresenter.forEach((presenter) => presenter.destroy());
-    this.#filmDetailsPresenter.clear();
+  #handleAddToWatchlistClickHandler = () => {
+    this.#changeData({...this.#film, watchlist: !this.#film.filmInfo.userDetails.watchlist});
   };
 
 
-  #handleCardControlsClickHandler = () => {
+  #handleAlreadyWatchedClickHandler = () => {
+    this.#changeData({...this.#film, alreadyWatched: !this.#film.filmInfo.userDetails.alreadyWatched});
   };
+
+  #handleAddToFavoritesClickHandler = () => {
+    this.#changeData({...this.#film, favorite: !this.#film.filmInfo.userDetails.favorite});
+  };
+
 
 }

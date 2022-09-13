@@ -10,30 +10,19 @@ const filmDetailsMode = {
 export default class FilmDetailsPresenter {
   #filmDetailsComponent = null;
   #film = null;
-  #changeMode = null;
+  #changeData = null;
   #mode = filmDetailsMode.CLOSED;
 
-  constructor(changeMode){
-    this.#changeMode = changeMode;
-  }
-
-  init = (film,comments) => {
+  init = (film, comments) => {
     this.#film = film;
     const prevFilmDetailsComponent = this.#filmDetailsComponent;
-    this.#filmDetailsComponent = new FilmDetailsView (film, comments);
-    if (this.#mode === filmDetailsMode.CLOSED) {
-      this.#handleCardClickHandler();
-    }
+    this.#filmDetailsComponent = new FilmDetailsView (film, comments, this.#changeData);
+
     if (this.#mode === filmDetailsMode.OPENED) {
       this.#closeFilmDetails();
     }
+    this.#handleCardClickHandler();
     remove(prevFilmDetailsComponent);
-  };
-
-  resetView = () => {
-    if (this.#mode !== filmDetailsMode.CLOSED) {
-      this.#handleCardClickHandler();
-    }
   };
 
   destroy = () => {
@@ -45,8 +34,9 @@ export default class FilmDetailsPresenter {
     document.addEventListener('keydown', this.#handleEscKeyDown);
     this.#filmDetailsComponent.setCloseClickHandler(this.#handleCardDetailsCloseClick);
     document.body.append(this.#filmDetailsComponent.element);
-    this.#filmDetailsComponent.setClickControlHandler(this.#handleControlClickHandler);
-    this.#changeMode();
+    this.#filmDetailsComponent.setWatchlistClickHandler(this.#handleWatchlistClickHandler);
+    this.#filmDetailsComponent.setWatchedClickHandler(this.#handleWatchedClickHandler);
+    this.#filmDetailsComponent.setFavoritesClickHandler(this.#handleFavotiteClickHandler);
     this.#mode = filmDetailsMode.OPENED;
   };
 
@@ -69,15 +59,16 @@ export default class FilmDetailsPresenter {
     }
   };
 
-  #handleControlClickHandler = (btnType) => {
-    switch (btnType) {
-      case ('watchlist'):
-    }
-    switch (btnType) {
-      case ('watched'):
-    }
-    switch (btnType) {
-      case ('favorite'):
-    }
+  #handleWatchlistClickHandler = () => {
+    this.#changeData({...this.#film, watchlist: !this.#film.filmInfo.userDetails.watchlist});
   };
+
+  #handleWatchedClickHandler = () => {
+    this.#changeData({...this.#film, alreadyWatched: !this.#film.filmInfo.userDetails.alreadyWatched});
+  };
+
+  #handleFavotiteClickHandler = () => {
+    this.#changeData({...this.#film, favorite: !this.#film.filmInfo.userDetails.favorite});
+  };
+
 }

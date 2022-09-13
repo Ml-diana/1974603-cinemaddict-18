@@ -1,19 +1,19 @@
 import {getRandomInteger, getRandomArrayElement} from '../utils/utils.js';
-import {FILM_COUNT, titles, posters, genres, descriptions, names, surnames, AgeRating, Rating, countries} from './const.js';
+import {ReleaseDate, FILM_COUNT, titles, posters, genres, descriptions, names, surnames, AgeRating, Rating, countries} from './const.js';
 import {nanoid} from 'nanoid';
 
 export const generateStandardCardFilm = () => ({
   'id': nanoid(),
   'title': getRandomArrayElement(titles),
   'alternativeTitle': getRandomArrayElement(titles),
-  'totalRating': getRandomInteger(Rating.MIN, Rating.MAX),
+  'rating': getRandomInteger(Rating.MIN, Rating.MAX),
   'poster': getRandomArrayElement(posters),
   'ageRating': getRandomInteger(AgeRating.MIN, AgeRating.MAX),
   'director': `${getRandomArrayElement(names)} ${getRandomArrayElement(surnames)}`,
   'writers': Array.from({length: 2}, () => `${getRandomArrayElement(names)} ${getRandomArrayElement(surnames)}`),
   'actors': Array.from({length: 2}, () => `${getRandomArrayElement(names)} ${getRandomArrayElement(surnames)}`),
   'release': {
-    'date': '2019-05-11T00:00:00.000Z',
+    'date': getRandomInteger(ReleaseDate.MIN, ReleaseDate.MAX),
     'releaseCountry': getRandomArrayElement(countries),
   },
   'runtime': 77,

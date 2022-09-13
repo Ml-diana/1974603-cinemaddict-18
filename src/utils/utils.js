@@ -21,7 +21,7 @@ const formatMinutes = (minutes) => dayjs.duration(minutes, 'minutes').format('H[
 
 export const isEscape = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
-const updateItem = (items, update) => {
+export const updateItem = (items, update) => {
   const index = items.findIndex((item) => item.id === update.id);
 
   if (index === -1) {
@@ -35,4 +35,8 @@ const updateItem = (items, update) => {
   ];
 };
 
-export {getRandomInteger, formatDate, formatFullDate, formatMinutes, getRandomArrayElement,formatDateWithYear, updateItem};
+export const sortByDate = (filmA, filmB) => (dayjs(filmB.filmInfo.release.date).diff(dayjs(filmA.filmInfo.release.date)));
+
+export const sortByRating = (filmA, filmB) => (filmB.filmInfo.rating - filmA.filmInfo.rating);
+
+export {getRandomInteger, formatDate, formatFullDate, formatMinutes, getRandomArrayElement,formatDateWithYear};
