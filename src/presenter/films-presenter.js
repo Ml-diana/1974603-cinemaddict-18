@@ -9,7 +9,7 @@ import {ONE_PART_OF_THE_FILMS} from '../mock/const.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import FilmCardPresenter from './film-card-presenter.js';
 import {updateItem, sortByDate, sortByRating} from '../utils/utils.js';
-import {filteredFilms} from '../utils/filter.js';
+import {filterFilms} from '../utils/filter.js';
 import {FilterType, SortingType} from '../utils/const.js';
 import FilmDetailsPresenter from './film-details-presenter.js';
 
@@ -51,25 +51,9 @@ export default class FilmsPresenter {
   };
 
   #renderFilms = () => {
-    this.#films = filteredFilms([...this.#filmsModel.films], this.#currentFilter);
+    this.#films = filterFilms([...this.#filmsModel.films], this.#currentFilter);
+    this.#sortFilms();
     this.#sourcedFilms = this.#filmsModel.films;
-    if (this.#films.length === 0) {
-      this.#noFilmComponent = new NoFilmView();
-      render(this.#noFilmComponent, this.#filmListComponent.filmsListContainerElement);
-      remove(this.#topRatedFilmsListComponent);
-      remove(this.#mostCommentedFilmsListComponent);
-      return;
-    }
-    if (this.#films.length > ONE_PART_OF_THE_FILMS) {
-      render(this.#showMoreButtonComponent, this.#filmListComponent.filmsListElement);
-      this.#showMoreButtonComponent.setClickHandler(this.#handleShowMoreButtonClick);
-    }
-    for (let i = 0; i < Math.min(this.#films.length, this.#renderedFilmCount); i++) {
-      this.#renderFilm(this.#films[i]);
-    }
-  };
-
-  #renderSortFilms = () => {
     if (this.#films.length === 0) {
       this.#noFilmComponent = new NoFilmView();
       render(this.#noFilmComponent, this.#filmListComponent.filmsListContainerElement);
@@ -96,7 +80,6 @@ export default class FilmsPresenter {
     this.#films = updateItem(this.#films, updatedFilm);
     this.#sourcedFilms = updateItem(this.#sourcedFilms, updatedFilm);
     this.#filmCardPresenters.get(updatedFilm.id).init(updatedFilm, this.#commentsModel);
-    //this.#renderFilm(updatedFilm);
   };
 
   #clearFilmList = () => {
@@ -109,9 +92,9 @@ export default class FilmsPresenter {
     const prevNavigationList = this.#navigationListComponent;
     const films = this.#filmsModel.films;
     const filteredFilmsCount = {
-      [FilterType.WATCHLIST]: filteredFilms(films, FilterType.WATCHLIST).length,
-      [FilterType.HISTORY]: filteredFilms(films, FilterType.HISTORY).length,
-      [FilterType.FAVORITES]: filteredFilms(films, FilterType.FAVORITES).length
+      [FilterType.WATCHLIST]: filterFilms(films, FilterType.WATCHLIST).length,
+      [FilterType.HISTORY]: filterFilms(films, FilterType.HISTORY).length,
+      [FilterType.FAVORITES]: filterFilms(films, FilterType.FAVORITES).length
     };
     this.#navigationListComponent = new NavigationListView(filteredFilmsCount);
     this.#navigationListComponent.setNavigationClickHandler(this.#handleFilterTypeChange);
@@ -152,22 +135,19 @@ export default class FilmsPresenter {
       return;
     }
     this.#clearFilmList();
-    this.#sortFilms(sortType);
-    this.#renderSortFilms();
+    this.#currentSortType = sortType;
+    this.#renderFilms();
   };
 
-  #sortFilms = (sortType) => {
-    switch (sortType) {
+  #sortFilms = () => {
+    switch (this.#currentSortType) {
       case SortingType.DATE:
         this.#films.sort(sortByDate);
         break;
       case SortingType.RATING:
         this.#films.sort(sortByRating);
         break;
-      default:
-        this.#films = [...this.#sourcedFilms];
     }
-    this.#currentSortType = sortType;
   };
 
 
