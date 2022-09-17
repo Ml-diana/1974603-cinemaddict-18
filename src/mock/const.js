@@ -1,8 +1,15 @@
 const MAX_COMMENTS = 5;
 
+const ONE_PART_OF_THE_FILMS = 5;
+
 const Rating = {
   MIN: 1,
   MAX: 10
+};
+
+const ReleaseDate = {
+  MIN: 1932,
+  MAX: 2021
 };
 
 const AgeRating = {
@@ -85,5 +92,5 @@ const descriptions = [
 ];
 
 
-export {FILM_COUNT, countries, emotions, titles, totalRatings, posters, genres, descriptions, MAX_COMMENTS, names, surnames, AgeRating, Rating, comments};
+export {ReleaseDate, ONE_PART_OF_THE_FILMS,FILM_COUNT, countries, emotions, titles, totalRatings, posters, genres, descriptions, MAX_COMMENTS, names, surnames, AgeRating, Rating, comments};
 

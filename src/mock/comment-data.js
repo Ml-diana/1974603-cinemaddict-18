@@ -1,4 +1,4 @@
-import {getRandomArrayElement} from '../utils.js';
+import {getRandomArrayElement} from '../utils/utils.js';
 import {comments, emotions, names, surnames} from './const.js';
 
 const generateComment = () => ({
