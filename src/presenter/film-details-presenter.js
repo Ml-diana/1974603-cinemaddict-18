@@ -1,3 +1,4 @@
+
 import FilmDetailsView from '../view/film-details-view.js';
 import {isEscape} from '../utils/utils.js';
 import {remove} from '../framework/render.js';
