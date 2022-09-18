@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import {formatDate, formatMinutes, formatFullDate} from '../utils/utils.js';
 
 const createFilmDetailsTemplate = (film, comments) => (
@@ -93,17 +93,34 @@ const createFilmDetailsTemplate = (film, comments) => (
       </ul>
 
     <form class="film-details__new-comment" action="" method="get">
-      <div class="film-details__add-emoji-label"></div>
+      <div class="film-details__add-emoji-label">
+      <img src="images/emoji/smile.png" width="55" height="55" alt="emoji-smile">
+      </div>
 
       <label class="film-details__comment-label">
         <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
       </label>
-        ${comments.map((item) =>`<div class="film-details__emoji-list">
-        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${item.emotion}" value="${item.emotion}">
-        <label class="film-details__emoji-label" for="emoji-${item.emotion}">
-          <img src="./images/emoji/${item.emotion}.png" width="30" height="30" alt="${item.emotion}">
-        </label>
-      </div>`).join('')}
+      <div class="film-details__emoji-list">
+      <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" checked>
+      <label class="film-details__emoji-label" for="emoji-smile">
+        <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
+      </label>
+
+      <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+      <label class="film-details__emoji-label" for="emoji-sleeping">
+        <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
+      </label>
+
+      <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
+      <label class="film-details__emoji-label" for="emoji-puke">
+        <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
+      </label>
+
+      <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
+      <label class="film-details__emoji-label" for="emoji-angry">
+        <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
+      </label>
+      </div>
       </form>
       </section>
     </div>
@@ -112,17 +129,20 @@ const createFilmDetailsTemplate = (film, comments) => (
 `
 );
 
-export default class FilmDetailsView extends AbstractView {
-  #film = null;
-  #comments = null;
-  constructor(film, comments) {
+export default class FilmDetailsView extends AbstractStatefulView {
+
+  constructor(film, comments, emotion) {
     super();
-    this.#film = film;
-    this.#comments = comments;
+    this._state = FilmDetailsView.parseFilmToState(
+      film,
+      comments,
+      emotion
+    );
+    this.emojiHandlers();
   }
 
   get template() {
-    return createFilmDetailsTemplate(this.#film, this.#comments);
+    return createFilmDetailsTemplate(this._state);
   }
 
   setCloseClickHandler = (callback) => {
@@ -150,6 +170,17 @@ export default class FilmDetailsView extends AbstractView {
     this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#favoritesClickHandler);
   };
 
+
+  emojiHandlers = () => {
+    //this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#emojiClickHandler);
+    this.element.querySelectorAll('.film-details__emoji-item')
+      .forEach((element) => element.addEventListener('click', this.#emojiClickHandler));
+  };
+
+  #emojiClickHandler = () => {
+
+  };
+
   #watchlistClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.watchlistClick();
@@ -165,15 +196,4 @@ export default class FilmDetailsView extends AbstractView {
     evt.preventDefault();
     this._callback.favoritesClick();
   };
-  /*
-  setClickControlHandler = (callback) => {
-    this._callback.click = callback;
-    this.element.querySelector('.film-details__controls').addEventListener('click', this.#clickControlHandler);
-  };
-
-  #clickControlHandler = (evt) => {
-    if (evt.target.id) {
-      this._callback.click(evt.target.id);
-    }
-  };*/
 }
