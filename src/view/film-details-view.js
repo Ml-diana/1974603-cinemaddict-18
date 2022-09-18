@@ -12,22 +12,18 @@ const createFilmDetailsTemplate = (film, comments) => (
 <div class="film-details__info-wrap">
   <div class="film-details__poster">
     <img class="film-details__poster-img" src="${film.filmInfo.poster}" alt="${film.filmInfo.title}">
-
     <p class="film-details__age">${film.filmInfo.ageRating}+</p>
   </div>
-
   <div class="film-details__info">
     <div class="film-details__info-head">
       <div class="film-details__title-wrap">
         <h3 class="film-details__title">${film.filmInfo.title}</h3>
         <p class="film-details__title-original">${film.filmInfo.alternativeTitle}</p>
       </div>
-
       <div class="film-details__rating">
         <p class="film-details__total-rating">${film.filmInfo.rating}</p>
       </div>
     </div>
-
     <table class="film-details__table">
       <tr class="film-details__row">
         <td class="film-details__term">Director</td>
@@ -60,13 +56,11 @@ const createFilmDetailsTemplate = (film, comments) => (
           </td>
       </tr>
     </table>
-
     <p class="film-details__film-description">
      ${film.filmInfo.description}
     </p>
   </div>
 </div>
-
 <section class="film-details__controls">
   <button type="button" class="film-details__control-button  ${film.filmInfo.userDetails.watchlist ? 'film-details__control-button--active' : ''} film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
   <button type="button" class="film-details__control-button ${film.filmInfo.userDetails.alreadyWatched ? 'film-details__control-button--active' : ''} film-details__control-button--watched" id="watched" name="watched">Already watched</button>
@@ -91,11 +85,12 @@ const createFilmDetailsTemplate = (film, comments) => (
         </div>
       </li>`).join('')}
       </ul>
-
     <form class="film-details__new-comment" action="" method="get">
+
       <div class="film-details__add-emoji-label">
       <img src="images/emoji/smile.png" width="55" height="55" alt="emoji-smile">
       </div>
+
 
       <label class="film-details__comment-label">
         <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -196,4 +191,5 @@ export default class FilmDetailsView extends AbstractStatefulView {
     evt.preventDefault();
     this._callback.favoritesClick();
   };
+
 }

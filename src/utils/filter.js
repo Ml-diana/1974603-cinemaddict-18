@@ -7,6 +7,6 @@ const filters = {
   [FilterType.FAVORITES]: (films) => films.filter((film) => film.filmInfo.userDetails.favorite === true),
 };
 
-const filteredFilms = (films, filterType) => filters[filterType](films);
+const filterFilms = (films, filterType) => filters[filterType](films);
 
-export {filteredFilms};
+export {filterFilms};
