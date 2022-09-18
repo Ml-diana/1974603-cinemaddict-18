@@ -124,8 +124,7 @@ const createFilmDetailsTemplate = (film) => (
     </div>
   </div>
 </section>
-`
-);
+`);
 
 export default class FilmDetailsView extends AbstractStatefulView {
 
