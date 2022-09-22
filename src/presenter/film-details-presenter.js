@@ -11,13 +11,13 @@ const filmDetailsMode = {
 export default class FilmDetailsPresenter {
   #filmDetailsComponent = null;
   #film = null;
-  #changeData = null;
+  //#changeData = null;
   #mode = filmDetailsMode.CLOSED;
 
   init = (film, comments) => {
     this.#film = film;
     const prevFilmDetailsComponent = this.#filmDetailsComponent;
-    this.#filmDetailsComponent = new FilmDetailsView (film, comments, this.#changeData);
+    this.#filmDetailsComponent = new FilmDetailsView (film, comments);
 
     if (this.#mode === filmDetailsMode.OPENED) {
       this.#closeFilmDetails();
@@ -61,15 +61,15 @@ export default class FilmDetailsPresenter {
   };
 
   #handleWatchlistClickHandler = () => {
-    this.#changeData({...this.#film, watchlist: !this.#film.filmInfo.userDetails.watchlist});
+    //this.#changeData({...this.#film, watchlist: !this.#film.filmInfo.userDetails.watchlist});
   };
 
   #handleWatchedClickHandler = () => {
-    this.#changeData({...this.#film, alreadyWatched: !this.#film.filmInfo.userDetails.alreadyWatched});
+    //this.#changeData({...this.#film, alreadyWatched: !this.#film.filmInfo.userDetails.alreadyWatched});
   };
 
   #handleFavotiteClickHandler = () => {
-    this.#changeData({...this.#film, favorite: !this.#film.filmInfo.userDetails.favorite});
+    //this.#changeData({...this.#film, favorite: !this.#film.filmInfo.userDetails.favorite});
   };
 
 }
