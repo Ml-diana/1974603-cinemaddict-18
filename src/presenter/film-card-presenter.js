@@ -6,25 +6,19 @@ export default class FilmCardPresenter {
   #film = null;
   #filmListComponent = null;
   #filmsModel = null;
-  #changeData = null;
   #commentsModel = null;
   #filmCardComponent = null;
   #filmDetailsPresenter = null;
 
-  constructor(filmListComponent, filmDetailsPresenter, changeData, filmsModel) {
+  constructor(filmListComponent, filmDetailsPresenter, filmsModel, commentsModel) {
     this.#filmListComponent = filmListComponent;
     this.#filmDetailsPresenter = filmDetailsPresenter;
-    this.#changeData = changeData;
     this.#filmsModel = filmsModel;
+    this.#commentsModel = commentsModel;
   }
 
-  init = (film, commentsModel) => {
+  init = (film) => {
     this.#film = film;
-    this.#renderFilmCard(this.#film);
-    this.#commentsModel = commentsModel;
-  };
-
-  #renderFilmCard = (film) => {
     const prevFilmCardComponent = this.#filmCardComponent;
     this.#filmCardComponent = new FilmCardView(film);
     this.#filmCardComponent.setAddToWatchlistClickHandler(this.#handleAddToWatchlistClickHandler);
@@ -37,7 +31,6 @@ export default class FilmCardPresenter {
     }
     replace(this.#filmCardComponent, prevFilmCardComponent);
     remove(prevFilmCardComponent);
-    //this.#clearFilmDetailsList();
   };
 
   destroy = () => {
@@ -48,10 +41,14 @@ export default class FilmCardPresenter {
     this.#filmDetailsPresenter.init(film,this.#commentsModel, this.#filmsModel);
   };
 
-  #handleAddToWatchlistClickHandler = () => {
-    this.#changeData({...this.#film, watchlist: !this.#film.filmInfo.userDetails.watchlist});
+  #changeData = (film) => {
+    this.#filmsModel.updateFilm(film);
   };
 
+  #handleAddToWatchlistClickHandler = () => {
+    this.#film.filmInfo.userDetails.watchlist = !this.#film.filmInfo.userDetails.watchlist;
+    this.#changeData({...this.#film });
+  };
 
   #handleAlreadyWatchedClickHandler = () => {
     this.#changeData({...this.#film, alreadyWatched: !this.#film.filmInfo.userDetails.alreadyWatched});
@@ -60,6 +57,4 @@ export default class FilmCardPresenter {
   #handleAddToFavoritesClickHandler = () => {
     this.#changeData({...this.#film, favorite: !this.#film.filmInfo.userDetails.favorite});
   };
-
-
 }

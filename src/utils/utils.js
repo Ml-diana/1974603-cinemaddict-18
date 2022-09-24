@@ -19,7 +19,11 @@ const formatFullDate = (date) => dayjs(date).format('YYYY/MM/DD hh:mm');
 const formatMinutes = (minutes) => dayjs.duration(minutes, 'minutes').format('H[h] mm[m]');
 
 
-export const isEscape = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+const ENTER_KEY_CODE = 13;
+const ESC_KEY_CODE = 27;
+
+export const isEscape = (evt) => evt.keyCode === ESC_KEY_CODE;
+export const isCtrlEnter = (evt) => evt.keyCode === ENTER_KEY_CODE && evt.ctrlKey;
 
 export const updateItem = (items, update) => {
   const index = items.findIndex((item) => item.id === update.id);

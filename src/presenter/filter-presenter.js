@@ -38,8 +38,8 @@ export default class FilterPresenter {
       [FilterType.HISTORY]: filterFilms(films, FilterType.HISTORY).length,
       [FilterType.FAVORITES]: filterFilms(films, FilterType.FAVORITES).length
     };
-    this.#navigationListComponent = new NavigationListView(filteredFilmsCount);
-    //this.#navigationListComponent.setNavigationClickHandler(this.#handleFilterTypeChange);
+    this.#navigationListComponent = new NavigationListView(filteredFilmsCount, this.#filterModel.filter);
+    this.#navigationListComponent.setNavigationClickHandler(this.#handleFilterTypeChange);
     if (prevNavigationList === null) {
       render(this.#navigationListComponent, this.#filterContainer);
       return;
@@ -52,10 +52,11 @@ export default class FilterPresenter {
     this.init();
   };
 
-/*
+
   #handleFilterTypeChange = (filterType) => {
     if (this.#filterModel.filter === filterType) {
-      //return;
+      return;
     }
-  };*/
+    this.#filterModel.setFilter('Major', filterType);
+  };
 }

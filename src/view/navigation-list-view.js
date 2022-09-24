@@ -11,14 +11,16 @@ const createNavigationListTemplate = (filteredFilmsCount) => (
 
 export default class NavigationListView extends AbstractView {
   #filteredFilmsCount = null;
+  #currentFilter = null;
 
-  constructor(filteredFilmsCount){
+  constructor(filteredFilmsCount, currentFilter){
     super();
     this.#filteredFilmsCount = filteredFilmsCount;
+    this.#currentFilter = currentFilter;
   }
 
   get template() {
-    return createNavigationListTemplate(this.#filteredFilmsCount);
+    return createNavigationListTemplate(this.#filteredFilmsCount, this.#currentFilter);
   }
 
   setNavigationClickHandler = (callback) => {
@@ -28,13 +30,6 @@ export default class NavigationListView extends AbstractView {
 
   #clickNavigationHandler = (evt) => {
     evt.preventDefault();
-    if (evt.target.tagName !== 'A') {
-      return;
-    }
-    this.element.querySelector('.main-navigation__item--active').classList.remove('main-navigation__item--active');
-    evt.target.classList.add('main-navigation__item--active');
-    if (evt.target.dataset.filterType) {
-      this._callback.click(evt.target.dataset.filterType);
-    }
+    this._callback.click(evt.target.dataset.filterType);
   };
 }

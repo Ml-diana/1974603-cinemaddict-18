@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import {formatDate, formatMinutes, formatFullDate} from '../utils/utils.js';
+import {formatDate, formatMinutes, formatFullDate, isCtrlEnter} from '../utils/utils.js';
 
 const createFilmDetailsTemplate = (film) => (
   `<section class="film-details">
@@ -68,7 +68,7 @@ const createFilmDetailsTemplate = (film) => (
 </div>
 <div class="film-details__bottom-container">
       <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.film.comment.length}</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comments.length}</span></h3>
         <ul class="film-details__comments-list">
         ${film.comments.map((item) =>`<li class="film-details__comment">
         <span class="film-details__comment-emoji">
@@ -79,7 +79,7 @@ const createFilmDetailsTemplate = (film) => (
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${item.author}</span>
             <span class="film-details__comment-day">${formatFullDate(item.date)}</span>
-            <button class="film-details__comment-delete">Delete</button>
+            <button class="film-details__comment-delete" data-id="${item.id}">Delete</button>
           </p>
         </div>
       </li>`).join('')}
@@ -197,9 +197,14 @@ export default class FilmDetailsView extends AbstractStatefulView {
   });
 
   setDeleteCommentHandler = (callback) => {
-    this._callback.closeCommentClick = callback;
+    this._callback.deleteCommentClick = callback;
     this.element.querySelectorAll('.film-details__comment-delete')
       .forEach((comment) => comment.addEventListener('click', this.#deleteCommentClick));
+  };
+
+  setAddCommentHandler = (callback) => {
+    this._callback.addCommentClick = callback;
+    // this.element.querySelector('.film-details__comment-input').addEventListener('keydown', );
   };
 
   #closeClickHandler = (evt) => {
@@ -235,8 +240,6 @@ export default class FilmDetailsView extends AbstractStatefulView {
 
   #deleteCommentClick = (evt) => {
     evt.preventDefault();
-    this._callback.closeCommentClick();
-    evt.path[3].remove();
+    this._callback.deleteCommentClick(evt.target.dataset['id']);
   };
-
 }

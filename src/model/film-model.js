@@ -14,6 +14,7 @@ export default class FilmsModel extends Observable {
 
   updateFilm(film) {
     this.#films = updateItem(this.#films, film);
+    this._notify('Minor', film);
   }
 }
 
