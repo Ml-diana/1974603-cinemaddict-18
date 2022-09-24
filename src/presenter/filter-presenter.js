@@ -7,7 +7,6 @@ export default class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
   #filmsModel = null;
-  #filterComponent = null;
   #currentFilter = FilterType.ALL;
   #navigationListComponent = null;
 
@@ -40,7 +39,7 @@ export default class FilterPresenter {
       [FilterType.FAVORITES]: filterFilms(films, FilterType.FAVORITES).length
     };
     this.#navigationListComponent = new NavigationListView(filteredFilmsCount);
-    this.#navigationListComponent.setNavigationClickHandler(this.#handleFilterTypeChange);
+    //this.#navigationListComponent.setNavigationClickHandler(this.#handleFilterTypeChange);
     if (prevNavigationList === null) {
       render(this.#navigationListComponent, this.#filterContainer);
       return;
@@ -53,9 +52,10 @@ export default class FilterPresenter {
     this.init();
   };
 
-
+/*
   #handleFilterTypeChange = (filterType) => {
-    console.log(this.#filterModel.filter);
-    //console.log(filterType);
-  };
+    if (this.#filterModel.filter === filterType) {
+      //return;
+    }
+  };*/
 }
