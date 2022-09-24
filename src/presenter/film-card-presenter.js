@@ -5,15 +5,17 @@ import {render, remove, replace} from '../framework/render.js';
 export default class FilmCardPresenter {
   #film = null;
   #filmListComponent = null;
+  #filmsModel = null;
   #changeData = null;
   #commentsModel = null;
   #filmCardComponent = null;
   #filmDetailsPresenter = null;
 
-  constructor(filmListComponent, filmDetailsPresenter, changeData) {
+  constructor(filmListComponent, filmDetailsPresenter, changeData, filmsModel) {
     this.#filmListComponent = filmListComponent;
     this.#filmDetailsPresenter = filmDetailsPresenter;
     this.#changeData = changeData;
+    this.#filmsModel = filmsModel;
   }
 
   init = (film, commentsModel) => {
@@ -43,8 +45,7 @@ export default class FilmCardPresenter {
   };
 
   #renderFilmDetails = (film) => {
-    const comments = [...this.#commentsModel.get(film)];
-    this.#filmDetailsPresenter.init(film,comments);
+    this.#filmDetailsPresenter.init(film,this.#commentsModel, this.#filmsModel);
   };
 
   #handleAddToWatchlistClickHandler = () => {

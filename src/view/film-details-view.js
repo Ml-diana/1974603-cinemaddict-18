@@ -196,6 +196,12 @@ export default class FilmDetailsView extends AbstractStatefulView {
     emotion
   });
 
+  setDeleteCommentHandler = (callback) => {
+    this._callback.closeCommentClick = callback;
+    this.element.querySelectorAll('.film-details__comment-delete')
+      .forEach((comment) => comment.addEventListener('click', this.#deleteCommentClick));
+  };
+
   #closeClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.closeClick();
@@ -227,5 +233,10 @@ export default class FilmDetailsView extends AbstractStatefulView {
     this.#scrollTop = evt.target.scrollTop;
   };
 
+  #deleteCommentClick = (evt) => {
+    evt.preventDefault();
+    this._callback.closeCommentClick();
+    evt.path[3].remove();
+  };
 
 }
