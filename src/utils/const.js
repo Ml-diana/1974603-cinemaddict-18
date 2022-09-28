@@ -11,15 +11,4 @@ const SortingType = {
   RATING: 'rating',
 };
 
-const UserAction = {
-  ADD_COMMENT: 'ADD_COMMENT',
-  DELETE_COMMENT: 'DELETE_COMMENT'
-};
-
-const UpdateType = {
-  PATCH: 'PATCH',
-  MINOR: 'MINOR',
-  MAJOR: 'MAJOR',
-};
-
-export {FilterType, SortingType, UserAction, UpdateType};
+export {FilterType, SortingType};

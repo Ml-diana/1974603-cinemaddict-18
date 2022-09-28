@@ -1,5 +1,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import {formatDate, formatMinutes, formatFullDate} from '../utils/utils.js';
+import {formatDate, formatMinutes, formatFullDate, isCtrlEnter} from '../utils/utils.js';
+//import dayjs from 'dayjs';
 
 const createFilmDetailsTemplate = (film) => (
   `<section class="film-details">
@@ -68,7 +69,7 @@ const createFilmDetailsTemplate = (film) => (
 </div>
 <div class="film-details__bottom-container">
       <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.film.comment.length}</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comments.length}</span></h3>
         <ul class="film-details__comments-list">
         ${film.comments.map((item) =>`<li class="film-details__comment">
         <span class="film-details__comment-emoji">
@@ -79,7 +80,7 @@ const createFilmDetailsTemplate = (film) => (
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${item.author}</span>
             <span class="film-details__comment-day">${formatFullDate(item.date)}</span>
-            <button class="film-details__comment-delete">Delete</button>
+            <button class="film-details__comment-delete" data-id="${item.id}">Delete</button>
           </p>
         </div>
       </li>`).join('')}
@@ -135,10 +136,13 @@ export default class FilmDetailsView extends AbstractStatefulView {
     this._state = FilmDetailsView.parseFilmToState({
       film,
       comments,
-      emotion: 'smile'
+      emotion: 'smile',
     });
     this.setEmojiHandler();
+    this.setDeleteCommentHandler();
+    this.setAddCommentHandler();
     this.setScrollHandler();
+
   }
 
   get template() {
@@ -152,6 +156,8 @@ export default class FilmDetailsView extends AbstractStatefulView {
     this.setFavoritesClickHandler (this._callback.favoritesClick);
     this.setEmojiHandler();
     this.setScrollHandler();
+    this.setDeleteCommentHandler();
+    this.setAddCommentHandler();
     this.element.scrollTop = this.#scrollTop;
   };
 
@@ -189,17 +195,39 @@ export default class FilmDetailsView extends AbstractStatefulView {
   static parseFilmToState = (
     film,
     comments,
-    emotion = 'smile'
+    emotion = 'smile',
   ) => ({
     ...film,
     ...comments,
-    emotion
+    emotion,
   });
 
   setDeleteCommentHandler = (callback) => {
-    this._callback.closeCommentClick = callback;
+    this._callback.deleteCommentClick = callback;
     this.element.querySelectorAll('.film-details__comment-delete')
       .forEach((comment) => comment.addEventListener('click', this.#deleteCommentClick));
+  };
+
+  setAddCommentHandler = (callback) => {
+    this._callback.addCommentClick = callback;
+    this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#addCommentClick);
+  };
+
+  #addCommentClick = (evt) => {
+    // const commentText = evt.target.value;
+    // this._state.comment = evt.target.value;
+    const emotion = this._state.emotion;
+    //const currentDate = dayjs('2019-05-11T16:12:32.554Z').fromNow();
+    const commentToAdd = {
+      author: 'Me',
+      comment: evt.target.value,
+      date: '2019-05-11T16:12:32.554Z',
+      emotion: emotion,
+    };
+    console.log(evt);
+    if (isCtrlEnter(evt)) {
+      this._callback.addCommentClick(commentToAdd);
+    }
   };
 
   #closeClickHandler = (evt) => {
@@ -235,8 +263,6 @@ export default class FilmDetailsView extends AbstractStatefulView {
 
   #deleteCommentClick = (evt) => {
     evt.preventDefault();
-    this._callback.closeCommentClick();
-    evt.path[3].remove();
+    this._callback.deleteCommentClick(evt.target.dataset['id']);
   };
-
 }

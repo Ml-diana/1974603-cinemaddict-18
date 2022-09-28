@@ -17,14 +17,16 @@ export default class CommentsModel extends Observable{
     this.#allComments = generateComments(this.#filmsModel.films);
   }
 
-  get = (film) => {
+  getFilmComments = (film) => {
     this.#comments = film.comment.map((commentId) =>
       this.#allComments.find((comment) =>
         comment.id === commentId)
     );
-
-    return this.#comments;
   };
+
+  get comments() {
+    return this.#comments;
+  }
 
   updateComment = (updateType, update) => {
     this.#comments = [
@@ -38,15 +40,16 @@ export default class CommentsModel extends Observable{
 
   addComment = (updateType, update) => {
     this.#comments = [
-      update,
       ...this.#comments,
+      update,
     ];
-
+    //console.log(this.#comments);
+    //console.log(updateType, update);
     this._notify(updateType, update);
   };
 
-  deleteComment = (updateType, update) => {
-    const index = this.#comments.findIndex((comment) => comment.id === update.id);
+  deleteComment = (updateType, commentId) => {
+    const index = this.#comments.findIndex((comment) => comment.id === commentId);
 
     if (index === -1) {
       throw new Error('Can\'t delete unexisting task');
@@ -57,7 +60,7 @@ export default class CommentsModel extends Observable{
       ...this.#comments.slice(index + 1),
     ];
 
-    this._notify(updateType);
+    this._notify(updateType, this.#comments);
   };
 }
 
