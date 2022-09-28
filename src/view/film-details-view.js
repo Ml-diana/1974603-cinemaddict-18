@@ -224,7 +224,6 @@ export default class FilmDetailsView extends AbstractStatefulView {
       date: '2019-05-11T16:12:32.554Z',
       emotion: emotion,
     };
-    console.log(evt);
     if (isCtrlEnter(evt)) {
       this._callback.addCommentClick(commentToAdd);
     }
