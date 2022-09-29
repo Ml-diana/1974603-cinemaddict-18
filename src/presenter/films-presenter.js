@@ -50,7 +50,6 @@ export default class FilmsPresenter {
       case SortingType.RATING:
         return films.sort(sortByRating);
     }
-    console.log(this.#currentSortType);
     return films;
   }
 
