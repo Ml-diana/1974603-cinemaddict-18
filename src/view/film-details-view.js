@@ -189,7 +189,7 @@ export default class FilmDetailsView extends AbstractStatefulView {
       .forEach((element) => element.addEventListener('click', this.#emojiClickHandler));
   };
 
-  setScrollHandler = (scroll) => {
+  setScrollHandler = () => {
     this.element.addEventListener('scroll', this.#scrollHandler);
   };
 
