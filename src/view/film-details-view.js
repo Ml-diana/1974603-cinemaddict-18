@@ -1,6 +1,7 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import {formatDate, formatMinutes, formatFullDate, isCtrlEnter} from '../utils/utils.js';
-//import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
+import he from 'he';
 
 const createFilmDetailsTemplate = (film) => (
   `<section class="film-details">
@@ -139,9 +140,9 @@ export default class FilmDetailsView extends AbstractStatefulView {
       emotion: 'smile',
     });
     this.setEmojiHandler();
+    this.setScrollHandler();
     this.setDeleteCommentHandler();
     this.setAddCommentHandler();
-    this.setScrollHandler();
 
   }
 
@@ -156,9 +157,9 @@ export default class FilmDetailsView extends AbstractStatefulView {
     this.setFavoritesClickHandler (this._callback.favoritesClick);
     this.setEmojiHandler();
     this.setScrollHandler();
-    this.setDeleteCommentHandler();
-    this.setAddCommentHandler();
     this.element.scrollTop = this.#scrollTop;
+    this.setDeleteCommentHandler(this._callback.deleteCommentClick);
+    this.setAddCommentHandler(this._callback.addCommentClick);
   };
 
 
@@ -188,7 +189,7 @@ export default class FilmDetailsView extends AbstractStatefulView {
       .forEach((element) => element.addEventListener('click', this.#emojiClickHandler));
   };
 
-  setScrollHandler = () => {
+  setScrollHandler = (scroll) => {
     this.element.addEventListener('scroll', this.#scrollHandler);
   };
 
@@ -214,18 +215,16 @@ export default class FilmDetailsView extends AbstractStatefulView {
   };
 
   #addCommentClick = (evt) => {
-    // const commentText = evt.target.value;
-    // this._state.comment = evt.target.value;
-    const emotion = this._state.emotion;
-    //const currentDate = dayjs('2019-05-11T16:12:32.554Z').fromNow();
     const commentToAdd = {
+      id: nanoid(),
       author: 'Me',
-      comment: evt.target.value,
+      comment: he.encode(evt.target.value),
       date: '2019-05-11T16:12:32.554Z',
-      emotion: emotion,
+      emotion: this._state.emotion,
     };
     if (isCtrlEnter(evt)) {
       this._callback.addCommentClick(commentToAdd);
+      this.element.scrollTop = this.#scrollTop;
     }
   };
 

@@ -43,8 +43,6 @@ export default class CommentsModel extends Observable{
       ...this.#comments,
       update,
     ];
-    //console.log(this.#comments);
-    //console.log(updateType, update);
     this._notify(updateType, update);
   };
 
