@@ -23,6 +23,7 @@ export const createFilmCardTemplate = (film) => `<article class="film-card">
 
 export default class FilmCardView extends AbstractView {
   #film = null;
+
   constructor(film) {
     super();
     this.#film = film;
@@ -57,20 +58,17 @@ export default class FilmCardView extends AbstractView {
   };
 
   #addToWatchlistClickHandler = (evt) => {
-    evt.preventDefault();
+    evt.stopPropagation();
     this._callback.addToWatchlistClick();
-
   };
 
   #alreadyWatchedClickHandler = (evt) => {
-    evt.preventDefault();
-    this.element.removeEventListener('click', this.#clickCardHandler);
+    evt.stopPropagation();
     this._callback.alreadyWatchedClick();
   };
 
   #addToFavoritesClickHandler = (evt) => {
-    evt.preventDefault();
-    this.element.removeEventListener('click', this.#clickCardHandler);
+    evt.stopPropagation();
     this._callback.addToFavoritesClick();
   };
 }

@@ -92,6 +92,7 @@ export default class FilmsPresenter {
   #clearFilmList = () => {
     this.#filmCardPresenters.forEach((presenter) => presenter.destroy());
     this.#currentSortType = SortingType.DEFAULT;
+    this.#sortButtonComponent.setSortingType(this.#currentSortType);
     this.#renderedFilmCount = ONE_PART_OF_THE_FILMS;
     remove(this.#showMoreButtonComponent);
     if (this.#noFilmComponent) {
@@ -106,7 +107,7 @@ export default class FilmsPresenter {
 
   #renderSortingList = () => {
     render(this.#sortButtonComponent, siteMainElement);
-    this.#sortButtonComponent.setSortingClickHandler(this.#handleSortingButtonClickHandler);
+    this.#sortButtonComponent.setSortingClickHandler(this.#handleSortingButtonClick);
   };
 
   #renderNoFilms = () => {
@@ -126,7 +127,7 @@ export default class FilmsPresenter {
     }
   };
 
-  #handleSortingButtonClickHandler = (sortType) => {
+  #handleSortingButtonClick = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
     }

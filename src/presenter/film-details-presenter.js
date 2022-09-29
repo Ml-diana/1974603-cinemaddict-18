@@ -34,7 +34,7 @@ export default class FilmDetailsPresenter {
     if (this.#mode === filmDetailsMode.OPENED) {
       this.#closeFilmDetails();
     }
-    this.#handleCardClickHandler();
+    this.#initCardDetailsHandlers();
     remove(prevFilmDetailsComponent);
   };
 
@@ -42,7 +42,7 @@ export default class FilmDetailsPresenter {
     remove(this.#filmDetailsComponent);
   };
 
-  #handleCardClickHandler = () => {
+  #initCardDetailsHandlers = () => {
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this.#handleEscKeyDown);
     this.#filmDetailsComponent.setCloseClickHandler(this.#handleCardDetailsCloseClick);
@@ -57,13 +57,14 @@ export default class FilmDetailsPresenter {
 
   #handleCardDetailsCloseClick = () => {
     this.#closeFilmDetails();
-    this.#mode = filmDetailsMode.CLOSED;
   };
 
   #closeFilmDetails = () => {
     document.body.classList.remove('hide-overflow');
     document.removeEventListener('keydown', this.#handleEscKeyDown);
     this.#filmDetailsComponent.element.remove();
+    this.#commentsModel.removeObserver(this.#handleCommentsModelEvent);
+    this.#filmsModel.removeObserver(this.#handleFilmModelEvent);
     this.#mode = filmDetailsMode.CLOSED;
   };
 
@@ -103,10 +104,14 @@ export default class FilmDetailsPresenter {
 
   #handleFilmModelEvent = (updateType, data) => {
     this.#film = data;
-    this.#renderFilmDetails();
+    this.#filmDetailsComponent.updateElement({
+      film: data
+    });
   };
 
-  #handleCommentsModelEvent = () => {
-    this.#renderFilmDetails();
+  #handleCommentsModelEvent = (updateType, data) => {
+    this.#filmDetailsComponent.updateElement({
+      comments: data
+    });
   };
 }
