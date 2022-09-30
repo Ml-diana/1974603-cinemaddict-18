@@ -37,8 +37,6 @@ export default class SortButtonView extends AbstractStatefulView {
     if (evt.target.tagName !== 'A') {
       return;
     }
-    this.element.querySelector('.sort__button--active').classList.remove('sort__button--active');
-    evt.target.classList.add('sort__button--active');
     this._callback.sortTypeChange(evt.target.dataset.sortType);
     this.setSortingType(evt.target.dataset.sortType);
   };
