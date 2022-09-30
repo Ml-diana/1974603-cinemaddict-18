@@ -27,14 +27,11 @@ export default class FilmDetailsPresenter {
 
   #renderFilmDetails = () => {
     const prevFilmDetailsComponent = this.#filmDetailsComponent;
-    //const comments = [...this.#commentsModel.get(this.#film)];
     this.#filmDetailsComponent = new FilmDetailsView(this.#film, this.#commentsModel.comments, this.#changeData);
-    //console.log(comments);
-
     if (this.#mode === filmDetailsMode.OPENED) {
       this.#closeFilmDetails();
     }
-    this.#handleCardClickHandler();
+    this.#initFilmDetailsClickHandlers();
     remove(prevFilmDetailsComponent);
   };
 
@@ -42,28 +39,29 @@ export default class FilmDetailsPresenter {
     remove(this.#filmDetailsComponent);
   };
 
-  #handleCardClickHandler = () => {
+  #initFilmDetailsClickHandlers = () => {
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this.#handleEscKeyDown);
     this.#filmDetailsComponent.setCloseClickHandler(this.#handleCardDetailsCloseClick);
     document.body.append(this.#filmDetailsComponent.element);
     this.#filmDetailsComponent.setWatchlistClickHandler(this.#watchlistClickHandler);
     this.#filmDetailsComponent.setWatchedClickHandler(this.#watchedClickHandler);
-    this.#filmDetailsComponent.setFavoritesClickHandler(this.#favotiteClickHandler);
-    this.#mode = filmDetailsMode.OPENED;
+    this.#filmDetailsComponent.setFavoriteClickHandler(this.#favoriteClickHandler);
     this.#filmDetailsComponent.setDeleteCommentHandler(this.#deleteCommentHandler);
     this.#filmDetailsComponent.setAddCommentHandler(this.#addCommentHandler);
+    this.#mode = filmDetailsMode.OPENED;
   };
 
   #handleCardDetailsCloseClick = () => {
     this.#closeFilmDetails();
-    this.#mode = filmDetailsMode.CLOSED;
   };
 
   #closeFilmDetails = () => {
     document.body.classList.remove('hide-overflow');
     document.removeEventListener('keydown', this.#handleEscKeyDown);
     this.#filmDetailsComponent.element.remove();
+    this.#commentsModel.removeObserver(this.#handleCommentsModelEvent);
+    this.#filmsModel.removeObserver(this.#handleFilmModelEvent);
     this.#mode = filmDetailsMode.CLOSED;
   };
 
@@ -84,7 +82,7 @@ export default class FilmDetailsPresenter {
     this.#changeData({...this.#film});
   };
 
-  #favotiteClickHandler = () => {
+  #favoriteClickHandler = () => {
     this.#film.filmInfo.userDetails.favorite = !this.#film.filmInfo.userDetails.favorite;
     this.#changeData({...this.#film});
   };
@@ -103,10 +101,14 @@ export default class FilmDetailsPresenter {
 
   #handleFilmModelEvent = (updateType, data) => {
     this.#film = data;
-    this.#renderFilmDetails();
+    this.#filmDetailsComponent.updateElement({
+      film: data
+    });
   };
 
-  #handleCommentsModelEvent = () => {
-    this.#renderFilmDetails();
+  #handleCommentsModelEvent = (updateType, data) => {
+    this.#filmDetailsComponent.updateElement({
+      comments: data
+    });
   };
 }
