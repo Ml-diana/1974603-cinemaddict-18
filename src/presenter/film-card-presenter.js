@@ -5,29 +5,29 @@ import {render, remove, replace} from '../framework/render.js';
 export default class FilmCardPresenter {
   #film = null;
   #filmListComponent = null;
-  #changeData = null;
+  #filmsModel = null;
   #commentsModel = null;
   #filmCardComponent = null;
   #filmDetailsPresenter = null;
 
-  constructor(filmListComponent, filmDetailsPresenter, changeData) {
+  constructor(filmListComponent, filmDetailsPresenter, filmsModel, commentsModel) {
     this.#filmListComponent = filmListComponent;
     this.#filmDetailsPresenter = filmDetailsPresenter;
-    this.#changeData = changeData;
+    this.#filmsModel = filmsModel;
+    this.#commentsModel = commentsModel;
   }
 
-  init = (film, commentsModel) => {
+  init = (film) => {
     this.#film = film;
     this.#renderFilmCard(this.#film);
-    this.#commentsModel = commentsModel;
   };
 
   #renderFilmCard = (film) => {
     const prevFilmCardComponent = this.#filmCardComponent;
     this.#filmCardComponent = new FilmCardView(film);
-    this.#filmCardComponent.setAddToWatchlistClickHandler(this.#handleAddToWatchlistClickHandler);
-    this.#filmCardComponent.setAlreadyWatchedClickHandler(this.#handleAlreadyWatchedClickHandler);
-    this.#filmCardComponent.setAddToFavoritesClickHandler(this.#handleAddToFavoritesClickHandler);
+    this.#filmCardComponent.setAddToWatchlistClickHandler(this.#addToWatchlistClickHandler);
+    this.#filmCardComponent.setAlreadyWatchedClickHandler(this.#alreadyWatchedClickHandler);
+    this.#filmCardComponent.setAddToFavoritesClickHandler(this.#addToFavoritesClickHandler);
     this.#filmCardComponent.setClickCardHandler(this.#renderFilmDetails);
     if (prevFilmCardComponent === null) {
       render(this.#filmCardComponent, this.#filmListComponent);
@@ -35,7 +35,6 @@ export default class FilmCardPresenter {
     }
     replace(this.#filmCardComponent, prevFilmCardComponent);
     remove(prevFilmCardComponent);
-    //this.#clearFilmDetailsList();
   };
 
   destroy = () => {
@@ -43,22 +42,26 @@ export default class FilmCardPresenter {
   };
 
   #renderFilmDetails = (film) => {
-    const comments = [...this.#commentsModel.get(film)];
-    this.#filmDetailsPresenter.init(film,comments);
+    this.#filmDetailsPresenter.init(film,this.#commentsModel, this.#filmsModel);
   };
 
-  #handleAddToWatchlistClickHandler = () => {
-    this.#changeData({...this.#film, watchlist: !this.#film.filmInfo.userDetails.watchlist});
+  #changeData = (film) => {
+    this.#filmsModel.updateFilm(film);
   };
 
-
-  #handleAlreadyWatchedClickHandler = () => {
-    this.#changeData({...this.#film, alreadyWatched: !this.#film.filmInfo.userDetails.alreadyWatched});
-  };
-
-  #handleAddToFavoritesClickHandler = () => {
-    this.#changeData({...this.#film, favorite: !this.#film.filmInfo.userDetails.favorite});
+  #addToWatchlistClickHandler = () => {
+    this.#film.filmInfo.userDetails.watchlist = !this.#film.filmInfo.userDetails.watchlist;
+    this.#changeData({...this.#film});
   };
 
 
+  #alreadyWatchedClickHandler = () => {
+    this.#film.filmInfo.userDetails.alreadyWatched = !this.#film.filmInfo.userDetails.alreadyWatched;
+    this.#changeData({...this.#film});
+  };
+
+  #addToFavoritesClickHandler = () => {
+    this.#film.filmInfo.userDetails.favorite = !this.#film.filmInfo.userDetails.favorite;
+    this.#changeData({...this.#film});
+  };
 }

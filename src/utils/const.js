@@ -10,4 +10,5 @@ const SortingType = {
   DATE: 'date',
   RATING: 'rating',
 };
+
 export {FilterType, SortingType};

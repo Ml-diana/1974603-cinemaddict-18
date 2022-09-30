@@ -1,4 +1,7 @@
-export default class FilmsModel {
+import Observable from '../framework/observable.js';
+import {updateItem} from '../utils/utils.js';
+
+export default class FilmsModel extends Observable {
   #films = null;
 
   set films(films) {
@@ -9,4 +12,10 @@ export default class FilmsModel {
     return this.#films;
   }
 
+  updateFilm(film) {
+    this.#films = updateItem(this.#films, film);
+    this._notify('Minor', film);
+  }
 }
+
+
