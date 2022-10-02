@@ -42,7 +42,7 @@ export default class FilmCardPresenter {
   };
 
   #renderFilmDetails = (film) => {
-    this.#filmDetailsPresenter.init(film,this.#commentsModel, this.#filmsModel);
+    this.#filmDetailsPresenter.init(film, this.#commentsModel, this.#filmsModel);
   };
 
   #changeData = (film) => {

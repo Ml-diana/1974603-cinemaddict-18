@@ -24,7 +24,7 @@ const formatMinutes = (minutes) => dayjs.duration(minutes, 'minutes').format('H[
 
 export const isEscape = (evt) => evt.keyCode === ESC_KEY_CODE;
 export const isCtrlEnter = (evt) => evt.keyCode === ENTER_KEY_CODE && evt.ctrlKey;
-
+/*
 export const updateItem = (items, update) => {
   const index = items.findIndex((item) => item.id === update.id);
 
@@ -37,7 +37,7 @@ export const updateItem = (items, update) => {
     update,
     ...items.slice(index + 1),
   ];
-};
+};*/
 
 export const sortByDate = (filmA, filmB) => (dayjs(filmB.filmInfo.release.date).diff(dayjs(filmA.filmInfo.release.date)));
 

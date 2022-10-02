@@ -1,27 +1,21 @@
-import {generateComments} from '../mock/comment-data.js';
 import Observable from '../framework/observable.js';
 
 export default class CommentsModel extends Observable{
-  #filmsModel = null;
-  #allComments = [];
+  #commentsApiService = null;
   #comments = [];
 
 
-  constructor(filmsModel) {
+  constructor(commentsApiService) {
     super();
-    this.#filmsModel = filmsModel;
-    this.#generateAllComments();
-  }
-
-  #generateAllComments() {
-    this.#allComments = generateComments(this.#filmsModel.films);
+    this.#commentsApiService = commentsApiService;
+    console.log(commentsApiService);
   }
 
   getFilmComments = (film) => {
-    this.#comments = film.comments.map((commentId) =>
-      this.#allComments.find((comment) =>
-        comment.id === commentId)
-    );
+    this.#commentsApiService.getFilmsComments(film.id).then((response) => {
+      this.#comments = response;
+      this._notify('Major', this.#comments);
+    });
   };
 
   get comments() {

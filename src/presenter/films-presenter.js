@@ -94,7 +94,7 @@ export default class FilmsPresenter {
   };
 
   #handleFilmChange = (updatedFilm) => {
-    this.#filmCardPresenters.get(updatedFilm.id).init(updatedFilm, this.#commentsModel.comments);
+    this.#filmCardPresenters.get(updatedFilm.id).init(updatedFilm, this.#commentsModel);
   };
 
   #clearFilmList = () => {

@@ -1,11 +1,6 @@
 import ApiService from './framework/api-service.js';
+import {HttpMethod} from './utils/const.js';
 
-const Method = {
-  GET: 'GET',
-  PUT: 'PUT',
-  POST: 'POST',
-  DELETE: 'DELETE'
-};
 
 export default class FilmsApiService extends ApiService {
   get films() {
@@ -17,21 +12,22 @@ export default class FilmsApiService extends ApiService {
   updateFilm = async (film) => {
     const response = await this._load({
       url: `movies/${film.id}`,
-      method: Method.PUT,
+      method: HttpMethod.PUT,
       body: JSON.stringify(this.#adaptToServer(film)),
       headers: new Headers({'Content-Type': 'application/json'}),
     });
 
     const parsedResponse = await ApiService.parseResponse(response);
+    console.log(parsedResponse);
     return parsedResponse;
   };
 
   #adaptToServer = (film) => {
     const adaptedFilm = {...film,
-      filmInfo: {
+      'film_info': {
         'title': film.filmInfo.title,
         'alternative_title': film.filmInfo.title,
-        'total_rating': film.filmInfo.totalRating,
+        'total_rating': film.filmInfo.rating,
         'poster': film.filmInfo.poster,
         'age_rating': film.filmInfo.ageRating,
         'director': film.filmInfo.director,
@@ -52,7 +48,7 @@ export default class FilmsApiService extends ApiService {
         'favorite': film.userDetails.favorite,
       },
     };
-
+    /*
     delete adaptedFilm.filmInfo.title;
     delete adaptedFilm.filmInfo.alternativeTitle;
     delete adaptedFilm.filmInfo.rating;
@@ -72,7 +68,9 @@ export default class FilmsApiService extends ApiService {
     delete adaptedFilm.userDetails.favorite;
     delete adaptedFilm.userDetails;
     delete adaptedFilm.filmInfo;
-
+    console.log(adaptedFilm);*/
+    delete adaptedFilm.userDetails;
+    delete adaptedFilm.filmInfo;
     return adaptedFilm;
   };
 }

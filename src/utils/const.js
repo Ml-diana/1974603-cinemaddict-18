@@ -11,4 +11,11 @@ const SortingType = {
   RATING: 'rating',
 };
 
+export const HttpMethod = {
+  GET: 'GET',
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE'
+};
+
 export {FilterType, SortingType};

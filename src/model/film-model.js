@@ -1,5 +1,5 @@
 import Observable from '../framework/observable.js';
-import {updateItem} from '../utils/utils.js';
+//import {updateItem} from '../utils/utils.js';
 
 export default class FilmsModel extends Observable {
   #films = [];
@@ -8,12 +8,11 @@ export default class FilmsModel extends Observable {
   constructor(filmsApiService) {
     super();
     this.#filmsApiService = filmsApiService;
-  /*
+    /*
     this.#filmsApiService.films.then((films) => {
       console.log(films.map(this.#adaptToClient));
     });*/
   }
-
 
   set films(films) {
     this.#films = films;
@@ -34,10 +33,28 @@ export default class FilmsModel extends Observable {
     this._notify('Init');
   };
 
-  updateFilm(film) {
-    this.#films = updateItem(this.#films, film);
-    this._notify('Minor', film);
-  }
+  updateFilm = async(film) => {
+    const index = this.#films.findIndex((item) => item.id === film.id);
+
+    if (index === -1) {
+      throw new Error('Can\'t update unexisting film');
+    }
+    try {
+      const response = await this.#filmsApiService.updateFilm(film);
+      const updatedFilm = this.#adaptToClient(response);
+
+      this.#films = [
+        ...this.#films.slice(0, index),
+        film,
+        ...this.#films.slice(index + 1),
+      ];
+
+      this._notify('Minor', updatedFilm);
+
+    } catch(err) {
+      throw new Error('Can\'t update film');
+    }
+  };
 
   #adaptToClient = (film) => {
     const adaptedFilm = {...film,
@@ -65,7 +82,7 @@ export default class FilmsModel extends Observable {
         favorite: film['user_details']['favorite'],
       },
     };
-
+    /*
     delete adaptedFilm['film_info']['title'];
     delete adaptedFilm['film_info']['alternative_title'];
     delete adaptedFilm['film_info']['total_rating'];
@@ -85,7 +102,9 @@ export default class FilmsModel extends Observable {
     delete adaptedFilm['user_details']['favorite'];
     delete adaptedFilm['user_details'];
     delete adaptedFilm['film_info'];
-
+*/
+    delete adaptedFilm['user_details'];
+    delete adaptedFilm['film_info'];
     return adaptedFilm;
   };
 }
