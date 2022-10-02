@@ -9,7 +9,7 @@ const createLoadingTemplate = () => (`
 `);
 
 export default class LoadingView extends AbstractView {
-  getTemplate() {
+  get template() {
     return createLoadingTemplate();
   }
 

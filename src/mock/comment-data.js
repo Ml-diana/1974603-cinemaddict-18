@@ -1,5 +1,22 @@
 import {getRandomArrayElement} from '../utils/utils.js';
-import {comments, emotions, names, surnames} from './const.js';
+
+const comments = [
+  'Interesting setting and a good cast',
+  'Booooooooooring',
+  'Very very old. Meh'
+];
+const emotions = ['smile', 'sleeping', 'puke', 'angry'];
+const names = [
+  'John',
+  'Tim',
+  'Tom'
+];
+
+const surnames = [
+  'Doe',
+  'Macoveev',
+  'Smith'
+];
 
 const generateComment = () => ({
   'author': Array.from({length: 1}, () => `${getRandomArrayElement(names)} ${getRandomArrayElement(surnames)}`),
@@ -8,7 +25,7 @@ const generateComment = () => ({
   'emotion': getRandomArrayElement(emotions)
 });
 
-const getCommentQuantity = (films) => films.reduce((count, film) => count + film.comment.length, 0);
+const getCommentQuantity = (films) => films.reduce((count, film) => count + film.comments.length, 0);
 const generateComments = (films) => {
   const commentCount = getCommentQuantity(films);
 

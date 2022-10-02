@@ -18,7 +18,7 @@ export default class CommentsModel extends Observable{
   }
 
   getFilmComments = (film) => {
-    this.#comments = film.comment.map((commentId) =>
+    this.#comments = film.comments.map((commentId) =>
       this.#allComments.find((comment) =>
         comment.id === commentId)
     );
