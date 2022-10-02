@@ -8,7 +8,6 @@ export default class CommentsModel extends Observable{
   constructor(commentsApiService) {
     super();
     this.#commentsApiService = commentsApiService;
-    console.log(commentsApiService);
   }
 
   getFilmComments = (film) => {
