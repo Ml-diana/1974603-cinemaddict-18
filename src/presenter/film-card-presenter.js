@@ -54,7 +54,6 @@ export default class FilmCardPresenter {
     this.#changeData({...this.#film});
   };
 
-
   #alreadyWatchedClickHandler = () => {
     this.#film.userDetails.alreadyWatched = !this.#film.userDetails.alreadyWatched;
     this.#changeData({...this.#film});
