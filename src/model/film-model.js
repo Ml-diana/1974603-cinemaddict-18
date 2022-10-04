@@ -1,5 +1,4 @@
 import Observable from '../framework/observable.js';
-//import {updateItem} from '../utils/utils.js';
 
 export default class FilmsModel extends Observable {
   #films = [];
@@ -8,10 +7,6 @@ export default class FilmsModel extends Observable {
   constructor(filmsApiService) {
     super();
     this.#filmsApiService = filmsApiService;
-    /*
-    this.#filmsApiService.films.then((films) => {
-      console.log(films.map(this.#adaptToClient));
-    });*/
   }
 
   set films(films) {
@@ -82,27 +77,6 @@ export default class FilmsModel extends Observable {
         favorite: film['user_details']['favorite'],
       },
     };
-    /*
-    delete adaptedFilm['film_info']['title'];
-    delete adaptedFilm['film_info']['alternative_title'];
-    delete adaptedFilm['film_info']['total_rating'];
-    delete adaptedFilm['film_info']['poster'];
-    delete adaptedFilm['film_info']['age_rating'];
-    delete adaptedFilm['film_info']['director'];
-    delete adaptedFilm['film_info']['writers'];
-    delete adaptedFilm['film_info']['actors'];
-    delete adaptedFilm['film_info']['release']['date'];
-    delete adaptedFilm['film_info']['release']['release_country'];
-    delete adaptedFilm['film_info']['runtime'];
-    delete adaptedFilm['film_info']['genre'];
-    delete adaptedFilm['film_info']['description'];
-    delete adaptedFilm['user_details']['watchlist'];
-    delete adaptedFilm['user_details']['already_watched'];
-    delete adaptedFilm['user_details']['watching_date'];
-    delete adaptedFilm['user_details']['favorite'];
-    delete adaptedFilm['user_details'];
-    delete adaptedFilm['film_info'];
-*/
     delete adaptedFilm['user_details'];
     delete adaptedFilm['film_info'];
     return adaptedFilm;

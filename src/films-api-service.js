@@ -8,7 +8,6 @@ export default class FilmsApiService extends ApiService {
       .then(ApiService.parseResponse);
   }
 
-
   updateFilm = async (film) => {
     const response = await this._load({
       url: `movies/${film.id}`,
@@ -47,27 +46,7 @@ export default class FilmsApiService extends ApiService {
         'favorite': film.userDetails.favorite,
       },
     };
-    /*
-    delete adaptedFilm.filmInfo.title;
-    delete adaptedFilm.filmInfo.alternativeTitle;
-    delete adaptedFilm.filmInfo.rating;
-    delete adaptedFilm.filmInfo.poster;
-    delete adaptedFilm.filmInfo.ageRating;
-    delete adaptedFilm.filmInfo.director;
-    delete adaptedFilm.filmInfo.writers;
-    delete adaptedFilm.filmInfo.actors;
-    delete adaptedFilm.filmInfo.release.date;
-    delete adaptedFilm.filmInfo.release.releaseCountry;
-    delete adaptedFilm.filmInfo.runtime;
-    delete adaptedFilm.filmInfo.genre;
-    delete adaptedFilm.filmInfo.description;
-    delete adaptedFilm.userDetails.watchlist;
-    delete adaptedFilm.userDetails.alreadyWatched;
-    delete adaptedFilm.userDetails.watchingDate;
-    delete adaptedFilm.userDetails.favorite;
-    delete adaptedFilm.userDetails;
-    delete adaptedFilm.filmInfo;
-    console.log(adaptedFilm);*/
+
     delete adaptedFilm.userDetails;
     delete adaptedFilm.filmInfo;
     return adaptedFilm;

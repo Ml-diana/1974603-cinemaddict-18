@@ -1,19 +1,16 @@
-
 import FilmDetailsView from '../view/film-details-view.js';
 import {isEscape} from '../utils/utils.js';
 import {remove} from '../framework/render.js';
-
-const filmDetailsMode = {
-  OPENED: 'OPENED',
-  CLOSED: 'CLOSED'
-};
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
+import {FilmDetailsMode, TimeLimit} from '../utils/const.js';
 
 export default class FilmDetailsPresenter {
   #filmDetailsComponent = null;
   #film = null;
   #filmsModel = null;
   #commentsModel = null;
-  #mode = filmDetailsMode.CLOSED;
+  #mode = FilmDetailsMode.CLOSED;
+  #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
 
   init = (film, commentsModel, filmsModel) => {
     this.#film = film;
@@ -28,7 +25,7 @@ export default class FilmDetailsPresenter {
   #renderFilmDetails = () => {
     const prevFilmDetailsComponent = this.#filmDetailsComponent;
     this.#filmDetailsComponent = new FilmDetailsView(this.#film, this.#commentsModel.comments, this.#changeData);
-    if (this.#mode === filmDetailsMode.OPENED) {
+    if (this.#mode === FilmDetailsMode.OPENED) {
       this.#closeFilmDetails();
     }
     this.#initFilmDetailsClickHandlers();
@@ -42,18 +39,14 @@ export default class FilmDetailsPresenter {
   #initFilmDetailsClickHandlers = () => {
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this.#handleEscKeyDown);
-    this.#filmDetailsComponent.setCloseClickHandler(this.#handleCardDetailsCloseClick);
+    this.#filmDetailsComponent.setCloseClickHandler(this.#closeFilmDetails);
     document.body.append(this.#filmDetailsComponent.element);
     this.#filmDetailsComponent.setWatchlistClickHandler(this.#watchlistClickHandler);
     this.#filmDetailsComponent.setWatchedClickHandler(this.#watchedClickHandler);
     this.#filmDetailsComponent.setFavoriteClickHandler(this.#favoriteClickHandler);
     this.#filmDetailsComponent.setDeleteCommentHandler(this.#deleteCommentHandler);
     this.#filmDetailsComponent.setAddCommentHandler(this.#addCommentHandler);
-    this.#mode = filmDetailsMode.OPENED;
-  };
-
-  #handleCardDetailsCloseClick = () => {
-    this.#closeFilmDetails();
+    this.#mode = FilmDetailsMode.OPENED;
   };
 
   #closeFilmDetails = () => {
@@ -62,7 +55,7 @@ export default class FilmDetailsPresenter {
     this.#filmDetailsComponent.element.remove();
     this.#commentsModel.removeObserver(this.#handleCommentsModelEvent);
     this.#filmsModel.removeObserver(this.#handleFilmModelEvent);
-    this.#mode = filmDetailsMode.CLOSED;
+    this.#mode = FilmDetailsMode.CLOSED;
   };
 
   #handleEscKeyDown = (evt) => {
@@ -92,23 +85,43 @@ export default class FilmDetailsPresenter {
   };
 
   #addCommentHandler = (comment) => {
-    this.#commentsModel.addComment('Minor', comment);
+    this.#commentsModel.addComment('Minor', comment, this.#film);
   };
 
   #changeData = (film) => {
     this.#filmsModel.updateFilm(film);
   };
 
-  #handleFilmModelEvent = (updateType, data) => {
-    this.#film = data;
-    this.#filmDetailsComponent.updateElement({
-      film: data
-    });
+  #handleFilmModelEvent = async (updateType, data) => {
+    this.#uiBlocker.block();
+    try {
+      this.#film = data;
+      await this.#filmDetailsComponent.updateElement({
+        film: data
+      });
+    } catch(err) {
+      if (data.userDetails.watchlist) {
+        this.#filmDetailsComponent.shakeWatchlistForm();
+      }
+      else if (data.userDetails.alreadyWatched) {
+        this.#filmDetailsComponent.shakeWatchedForm();
+      }
+      else if (data.userDetails.favorite) {
+        this.#filmDetailsComponent.shakeFavoriteForm();
+      }
+    }
+    this.#uiBlocker.unblock();
   };
 
-  #handleCommentsModelEvent = (updateType, data) => {
-    this.#filmDetailsComponent.updateElement({
-      comments: data
-    });
+  #handleCommentsModelEvent = async (updateType, data) => {
+    this.#uiBlocker.block();
+    try {
+      await this.#filmDetailsComponent.updateElement({
+        comments: data
+      });
+    } catch(err) {
+      this.#filmDetailsComponent.shakeForm();
+    }
+    this.#uiBlocker.unblock();
   };
 }

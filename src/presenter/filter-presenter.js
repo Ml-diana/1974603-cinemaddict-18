@@ -13,7 +13,6 @@ export default class FilterPresenter {
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
     this.#filmsModel = filmsModel;
-
     this.#filmsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
@@ -40,7 +39,6 @@ export default class FilterPresenter {
   #handleModelEvent = () => {
     this.init();
   };
-
 
   #handleFilterTypeChange = (filterType) => {
     if (this.#filterModel.filter === filterType) {

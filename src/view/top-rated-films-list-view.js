@@ -47,8 +47,8 @@ const createTopRatedFilmsListTemplate = () => (
 );
 
 export default class TopRatedFilmsListView extends AbstractView {
-
   get template() {
     return createTopRatedFilmsListTemplate();
   }
+
 }

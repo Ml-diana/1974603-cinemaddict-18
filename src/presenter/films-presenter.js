@@ -7,13 +7,12 @@ import SortButtonView from '../view/sort-button-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import FilmCardPresenter from './film-card-presenter.js';
 import {sortByDate, sortByRating} from '../utils/utils.js';
-import {SortingType} from '../utils/const.js';
+import {SortingType, ONE_PART_OF_THE_FILMS} from '../utils/const.js';
 import FilmDetailsPresenter from './film-details-presenter.js';
 import FilterPresenter from './filter-presenter.js';
 import {filterFilms} from '../utils/filter.js';
 import LoadingView from '../view/loading-view.js';
 
-const ONE_PART_OF_THE_FILMS = 5;
 const siteMainElement = document.querySelector('.main');
 
 export default class FilmsPresenter {
@@ -22,8 +21,8 @@ export default class FilmsPresenter {
   #noFilmComponent = null;
   #commentsModel = null;
   #filterModel = null;
-  #filmListComponent = new FilmsListView();
   #loadingComponent = null;
+  #filmListComponent = new FilmsListView();
   #filmDetailsPresenter = new FilmDetailsPresenter();
   #topRatedFilmsListComponent = new TopRatedFilmsListView();
   #mostCommentedFilmsListComponent = new MostCommentedFilmsListView();
@@ -58,14 +57,15 @@ export default class FilmsPresenter {
   init = () => {
     this.#renderNavigationList();
     this.#renderSortingList();
-    render(this.#filmListComponent, this.#cinemaContainer);
     this.#renderFilms();
+    render(this.#filmListComponent, this.#cinemaContainer);
   };
 
   #renderFilms = () => {
     if (this.#isLoading) {
       remove(this.#topRatedFilmsListComponent);
       remove(this.#mostCommentedFilmsListComponent);
+      remove(this.#sortButtonComponent);
       this.#renderLoading();
       return;
     }
