@@ -1,6 +1,4 @@
 import FilmsListView from '../view/films-list-view.js';
-import TopRatedFilmsListView from '../view/top-rated-films-list-view.js';
-import MostCommentedFilmsListView from '../view/most-commented-films-list-view.js';
 import {render, remove} from '../framework/render.js';
 import NoFilmView from '../view/no-film-view.js';
 import SortButtonView from '../view/sort-button-view.js';
@@ -24,8 +22,6 @@ export default class FilmsPresenter {
   #loadingComponent = null;
   #filmListComponent = new FilmsListView();
   #filmDetailsPresenter = new FilmDetailsPresenter();
-  #topRatedFilmsListComponent = new TopRatedFilmsListView();
-  #mostCommentedFilmsListComponent = new MostCommentedFilmsListView();
   #showMoreButtonComponent = new ShowMoreButtonView();
   #sortButtonComponent = new SortButtonView();
   #renderedFilmCount = ONE_PART_OF_THE_FILMS;
@@ -63,8 +59,6 @@ export default class FilmsPresenter {
 
   #renderFilms = () => {
     if (this.#isLoading) {
-      remove(this.#topRatedFilmsListComponent);
-      remove(this.#mostCommentedFilmsListComponent);
       remove(this.#sortButtonComponent);
       this.#renderLoading();
       return;
@@ -72,8 +66,6 @@ export default class FilmsPresenter {
     const films = this.films;
     if (films.length === 0) {
       this.#renderNoFilms();
-      remove(this.#topRatedFilmsListComponent);
-      remove(this.#mostCommentedFilmsListComponent);
       return;
     }
     if (films.length > ONE_PART_OF_THE_FILMS) {
@@ -83,8 +75,6 @@ export default class FilmsPresenter {
     for (let i = 0; i < Math.min(films.length, this.#renderedFilmCount); i++) {
       this.#renderFilm(films[i]);
     }
-    render(this.#topRatedFilmsListComponent, this.#filmListComponent.element);
-    render(this.#mostCommentedFilmsListComponent, this.#filmListComponent.element);
   };
 
   #renderFilm = (film) => {
