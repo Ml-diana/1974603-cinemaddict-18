@@ -1,9 +1,12 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import {formatDate, formatMinutes, formatFullDate, isCtrlEnter} from '../utils/utils.js';
-import {nanoid} from 'nanoid';
+import {formatDate, formatMinutes, isCtrlEnter} from '../utils/utils.js';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import dayjs from 'dayjs';
 import he from 'he';
+dayjs.extend(relativeTime);
 
-const createFilmDetailsTemplate = ({film, comments, emotion}) => (
+
+const createFilmDetailsTemplate = ({film, comments, emotion, isDisabled}) => (
   `<section class="film-details">
   <div class="film-details__inner">
     <div class="film-details__top-container">
@@ -63,9 +66,9 @@ const createFilmDetailsTemplate = ({film, comments, emotion}) => (
   </div>
 </div>
 <section class="film-details__controls">
-  <button type="button" class="film-details__control-button  ${film.filmInfo.userDetails.watchlist ? 'film-details__control-button--active' : ''} film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
-  <button type="button" class="film-details__control-button ${film.filmInfo.userDetails.alreadyWatched ? 'film-details__control-button--active' : ''} film-details__control-button--watched" id="watched" name="watched">Already watched</button>
-  <button type="button" class="film-details__control-button  ${film.filmInfo.userDetails.favorite ? 'film-details__control-button--active' : ''} film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
+  <button type="button" class="film-details__control-button  ${film.userDetails.watchlist ? 'film-details__control-button--active' : ''} film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
+  <button type="button" class="film-details__control-button ${film.userDetails.alreadyWatched ? 'film-details__control-button--active' : ''} film-details__control-button--watched" id="watched" name="watched">Already watched</button>
+  <button type="button" class="film-details__control-button  ${film.userDetails.favorite ? 'film-details__control-button--active' : ''} film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
 </section>
 </div>
 <div class="film-details__bottom-container">
@@ -80,13 +83,13 @@ const createFilmDetailsTemplate = ({film, comments, emotion}) => (
           <p class="film-details__comment-text">${item.comment}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${item.author}</span>
-            <span class="film-details__comment-day">${formatFullDate(item.date)}</span>
-            <button class="film-details__comment-delete" data-id="${item.id}">Delete</button>
+            <span class="film-details__comment-day">${dayjs(item.date).fromNow()}</span>
+            <button class="film-details__comment-delete" data-id="${item.id}" ${isDisabled ? 'disabled' : ''}>Delete</button>
           </p>
         </div>
       </li>`).join('')}
       </ul>
-    <form class="film-details__new-comment" action="" method="get">
+    <form class="film-details__new-comment" action="" method="get" ${isDisabled ? 'disabled' : ''}>
 
       <div class="film-details__add-emoji-label">
       <img src="images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
@@ -125,8 +128,8 @@ const createFilmDetailsTemplate = ({film, comments, emotion}) => (
       </section>
     </div>
   </div>
-</section>
-`);
+</section>`
+);
 
 
 export default class FilmDetailsView extends AbstractStatefulView {
@@ -139,6 +142,7 @@ export default class FilmDetailsView extends AbstractStatefulView {
       film,
       comments,
       emotion: 'smile',
+      isDisabled: false
     };
     this.setEmojiHandler();
     this.setScrollHandler();
@@ -161,8 +165,8 @@ export default class FilmDetailsView extends AbstractStatefulView {
     this.element.scrollTop = this.#scrollTop;
     this.setDeleteCommentHandler(this._callback.deleteCommentClick);
     this.setAddCommentHandler(this._callback.addCommentClick);
+    this._state.isDisabled = false;
   };
-
 
   setCloseClickHandler = (callback) => {
     this._callback.closeClick = callback;
@@ -205,6 +209,31 @@ export default class FilmDetailsView extends AbstractStatefulView {
     this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#addCommentClickHandler);
   };
 
+  shakeControl () {
+    const element = this.element.querySelector('.film-details__controls');
+    element.disabled = true;
+    this.shake.call({element}, () => {
+      element.disabled = false;
+    });
+  }
+
+  shakeComment (commentId) {
+    const button = this.element.querySelector(`button[data-id = '${commentId}']`);
+    const element = button.closest('.film-details__comment');
+    this.shake.call({element}, () => {
+      button.innerHTML = 'Delete';
+      button.disabled = false;
+    });
+  }
+
+  shakeForm () {
+    const element = this.element.querySelector('.film-details__new-comment');
+    element.disabled = true;
+    this.shake.call({element}, () => {
+      element.disabled = false;
+    });
+  }
+
   #closeClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.closeClick();
@@ -213,17 +242,20 @@ export default class FilmDetailsView extends AbstractStatefulView {
   #watchlistClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.watchlistClick();
+    evt.target.disabled = true;
 
   };
 
   #watchedClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.watchedClick();
+    evt.target.disabled = true;
   };
 
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.favoritesClick();
+    evt.target.disabled = true;
   };
 
   #emojiClickHandler = (evt) => {
@@ -237,20 +269,21 @@ export default class FilmDetailsView extends AbstractStatefulView {
   };
 
   #addCommentClickHandler = (evt) => {
-    const commentToAdd = {
-      id: nanoid(),
-      author: 'Me',
-      comment: he.encode(evt.target.value),
-      date: '2019-05-11T16:12:32.554Z',
-      emotion: this._state.emotion,
-    };
-    if (isCtrlEnter(evt)) {
+    if (isCtrlEnter(evt) && !this.isDisabled) {
+      const commentToAdd = {
+        comment: he.encode(evt.target.value),
+        emotion: this._state.emotion,
+      };
       this._callback.addCommentClick(commentToAdd);
+      this._state.isDisabled = true;
+      this._state.emotion = 'smile';
     }
   };
 
   #deleteCommentClickHandler = (evt) => {
     evt.preventDefault();
+    evt.target.disabled = true;
+    evt.target.innerHTML = 'Deleting...';
     this._callback.deleteCommentClick(evt.target.dataset['id']);
   };
 }

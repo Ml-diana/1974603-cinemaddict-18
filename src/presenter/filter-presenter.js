@@ -13,7 +13,6 @@ export default class FilterPresenter {
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
     this.#filmsModel = filmsModel;
-
     this.#filmsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
@@ -26,6 +25,7 @@ export default class FilterPresenter {
       [FilterType.HISTORY]: filterFilms(films, FilterType.HISTORY).length,
       [FilterType.FAVORITES]: filterFilms(films, FilterType.FAVORITES).length
     };
+
     this.#navigationListComponent = new NavigationListView(filteredFilmsCount, this.#filterModel.filter);
     this.#navigationListComponent.setNavigationClickHandler(this.#handleFilterTypeChange);
     if (prevNavigationList === null) {
@@ -39,7 +39,6 @@ export default class FilterPresenter {
   #handleModelEvent = () => {
     this.init();
   };
-
 
   #handleFilterTypeChange = (filterType) => {
     if (this.#filterModel.filter === filterType) {

@@ -4,15 +4,14 @@ import MostCommentedFilmsListView from '../view/most-commented-films-list-view.j
 import {render, remove} from '../framework/render.js';
 import NoFilmView from '../view/no-film-view.js';
 import SortButtonView from '../view/sort-button-view.js';
-import {ONE_PART_OF_THE_FILMS} from '../mock/const.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import FilmCardPresenter from './film-card-presenter.js';
 import {sortByDate, sortByRating} from '../utils/utils.js';
-import {SortingType} from '../utils/const.js';
+import {SortingType, ONE_PART_OF_THE_FILMS} from '../utils/const.js';
 import FilmDetailsPresenter from './film-details-presenter.js';
 import FilterPresenter from './filter-presenter.js';
 import {filterFilms} from '../utils/filter.js';
-
+import LoadingView from '../view/loading-view.js';
 
 const siteMainElement = document.querySelector('.main');
 
@@ -22,6 +21,7 @@ export default class FilmsPresenter {
   #noFilmComponent = null;
   #commentsModel = null;
   #filterModel = null;
+  #loadingComponent = null;
   #filmListComponent = new FilmsListView();
   #filmDetailsPresenter = new FilmDetailsPresenter();
   #topRatedFilmsListComponent = new TopRatedFilmsListView();
@@ -31,6 +31,7 @@ export default class FilmsPresenter {
   #renderedFilmCount = ONE_PART_OF_THE_FILMS;
   #currentSortType = SortingType.DEFAULT;
   #filmCardPresenters = new Map();
+  #isLoading = true;
 
 
   constructor(cinemaContainer, filmsModel, commentsModel, filterModel) {
@@ -56,13 +57,18 @@ export default class FilmsPresenter {
   init = () => {
     this.#renderNavigationList();
     this.#renderSortingList();
-    render(this.#filmListComponent, this.#cinemaContainer);
     this.#renderFilms();
-    render(this.#topRatedFilmsListComponent, this.#filmListComponent.element);
-    render(this.#mostCommentedFilmsListComponent, this.#filmListComponent.element);
+    render(this.#filmListComponent, this.#cinemaContainer);
   };
 
   #renderFilms = () => {
+    if (this.#isLoading) {
+      remove(this.#topRatedFilmsListComponent);
+      remove(this.#mostCommentedFilmsListComponent);
+      remove(this.#sortButtonComponent);
+      this.#renderLoading();
+      return;
+    }
     const films = this.films;
     if (films.length === 0) {
       this.#renderNoFilms();
@@ -77,6 +83,8 @@ export default class FilmsPresenter {
     for (let i = 0; i < Math.min(films.length, this.#renderedFilmCount); i++) {
       this.#renderFilm(films[i]);
     }
+    render(this.#topRatedFilmsListComponent, this.#filmListComponent.element);
+    render(this.#mostCommentedFilmsListComponent, this.#filmListComponent.element);
   };
 
   #renderFilm = (film) => {
@@ -86,7 +94,7 @@ export default class FilmsPresenter {
   };
 
   #handleFilmChange = (updatedFilm) => {
-    this.#filmCardPresenters.get(updatedFilm.id).init(updatedFilm, this.#commentsModel.comments);
+    this.#filmCardPresenters.get(updatedFilm.id).init(updatedFilm, this.#commentsModel);
   };
 
   #clearFilmList = () => {
@@ -114,6 +122,7 @@ export default class FilmsPresenter {
   #renderNoFilms = () => {
     this.#noFilmComponent = new NoFilmView( this.#filterModel.filter);
     render(this.#noFilmComponent, this.#filmListComponent.filmsListContainerElement);
+    remove(this.#loadingComponent);
   };
 
 
@@ -137,6 +146,11 @@ export default class FilmsPresenter {
     this.#renderFilms();
   };
 
+  #renderLoading = () => {
+    this.#loadingComponent = new LoadingView();
+    render(this.#loadingComponent, this.#filmListComponent.filmsListContainerElement);
+  };
+
   #handleModalEvent = (updateType, data) => {
     switch (updateType) {
       case 'Minor':
@@ -144,6 +158,11 @@ export default class FilmsPresenter {
         break;
       case 'Major':
         this.#clearFilmList();
+        this.#renderFilms();
+        break;
+      case 'Init':
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
         this.#renderFilms();
     }
   };

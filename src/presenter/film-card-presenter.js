@@ -42,7 +42,7 @@ export default class FilmCardPresenter {
   };
 
   #renderFilmDetails = (film) => {
-    this.#filmDetailsPresenter.init(film,this.#commentsModel, this.#filmsModel);
+    this.#filmDetailsPresenter.init(film, this.#commentsModel, this.#filmsModel);
   };
 
   #changeData = (film) => {
@@ -50,18 +50,17 @@ export default class FilmCardPresenter {
   };
 
   #addToWatchlistClickHandler = () => {
-    this.#film.filmInfo.userDetails.watchlist = !this.#film.filmInfo.userDetails.watchlist;
+    this.#film.userDetails.watchlist = !this.#film.userDetails.watchlist;
     this.#changeData({...this.#film});
   };
 
-
   #alreadyWatchedClickHandler = () => {
-    this.#film.filmInfo.userDetails.alreadyWatched = !this.#film.filmInfo.userDetails.alreadyWatched;
+    this.#film.userDetails.alreadyWatched = !this.#film.userDetails.alreadyWatched;
     this.#changeData({...this.#film});
   };
 
   #addToFavoritesClickHandler = () => {
-    this.#film.filmInfo.userDetails.favorite = !this.#film.filmInfo.userDetails.favorite;
+    this.#film.userDetails.favorite = !this.#film.userDetails.favorite;
     this.#changeData({...this.#film});
   };
 }

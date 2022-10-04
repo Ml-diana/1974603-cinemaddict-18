@@ -1,54 +1,53 @@
-import {generateComments} from '../mock/comment-data.js';
 import Observable from '../framework/observable.js';
 
 export default class CommentsModel extends Observable{
-  #filmsModel = null;
-  #allComments = [];
+  #commentsApiService = null;
   #comments = [];
 
 
-  constructor(filmsModel) {
+  constructor(commentsApiService) {
     super();
-    this.#filmsModel = filmsModel;
-    this.#generateAllComments();
-  }
-
-  #generateAllComments() {
-    this.#allComments = generateComments(this.#filmsModel.films);
+    this.#commentsApiService = commentsApiService;
   }
 
   getFilmComments = (film) => {
-    this.#comments = film.comment.map((commentId) =>
-      this.#allComments.find((comment) =>
-        comment.id === commentId)
-    );
+    this.#commentsApiService.getFilmsComments(film.id).then((response) => {
+      this.#comments = response;
+      this._notify('Major', this.#comments);
+    });
   };
 
   get comments() {
     return this.#comments;
   }
 
-  addComment = (updateType, update) => {
-    this.#comments = [
-      ...this.#comments,
-      update,
-    ];
-    this._notify(updateType, this.#comments);
+  addComment = async (updateType, update, film) => {
+    try {
+      const response = await this.#commentsApiService.addComment(update, film);
+      this.#comments = [...response.comments];
+      this._notify(updateType, this.#comments);
+    } catch(err) {
+      throw new Error('Can\'t add comment');
+    }
+
   };
 
-  deleteComment = (updateType, commentId) => {
+  deleteComment = async (updateType, commentId) => {
     const index = this.#comments.findIndex((comment) => comment.id === commentId);
 
     if (index === -1) {
-      throw new Error('Can\'t delete unexisting task');
+      throw new Error('Can\'t delete unexisting comment');
     }
-
-    this.#comments = [
-      ...this.#comments.slice(0, index),
-      ...this.#comments.slice(index + 1),
-    ];
-
-    this._notify(updateType, this.#comments);
+    try {
+      await this.#commentsApiService.deleteComment(commentId);
+      this.#comments = [
+        ...this.#comments.slice(0, index),
+        ...this.#comments.slice(index + 1),
+      ];
+      this._notify(updateType, this.#comments);
+    } catch(err) {
+      throw new Error('Can\'t delete comment');
+    }
   };
 }
 
