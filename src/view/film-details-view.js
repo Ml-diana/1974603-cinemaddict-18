@@ -1,7 +1,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import {formatDate, formatMinutes, isCtrlEnter} from '../utils/utils.js';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import {SHAKE_ANIMATION_TIMEOUT} from '../utils/const';
 import dayjs from 'dayjs';
 import he from 'he';
 dayjs.extend(relativeTime);
@@ -90,7 +89,7 @@ const createFilmDetailsTemplate = ({film, comments, emotion, isDisabled}) => (
         </div>
       </li>`).join('')}
       </ul>
-    <form class="film-details__new-comment" action="" method="get">
+    <form class="film-details__new-comment" action="" method="get" ${isDisabled ? 'disabled' : ''}>
 
       <div class="film-details__add-emoji-label">
       <img src="images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
@@ -98,29 +97,29 @@ const createFilmDetailsTemplate = ({film, comments, emotion, isDisabled}) => (
 
 
       <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${isDisabled ? 'disabled' : ''}></textarea>
+        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
       </label>
       <div class="film-details__emoji-list">
       <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile"
-      ${emotion === 'smile' ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
+      ${emotion === 'smile' ? 'checked' : ''}>
       <label class="film-details__emoji-label" for="emoji-smile">
         <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
       </label>
 
       <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping"
-      ${emotion === 'sleeping' ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
+      ${emotion === 'sleeping' ? 'checked' : ''}>
       <label class="film-details__emoji-label" for="emoji-sleeping">
         <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
       </label>
 
       <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke"
-      ${emotion === 'puke' ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
+      ${emotion === 'puke' ? 'checked' : ''}>
       <label class="film-details__emoji-label" for="emoji-puke">
         <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
       </label>
 
       <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry"
-      ${emotion === 'angry' ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
+      ${emotion === 'angry' ? 'checked' : ''}>
       <label class="film-details__emoji-label" for="emoji-angry">
         <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
       </label>
@@ -166,6 +165,7 @@ export default class FilmDetailsView extends AbstractStatefulView {
     this.element.scrollTop = this.#scrollTop;
     this.setDeleteCommentHandler(this._callback.deleteCommentClick);
     this.setAddCommentHandler(this._callback.addCommentClick);
+    this._state.isDisabled = false;
   };
 
   setCloseClickHandler = (callback) => {
@@ -209,33 +209,30 @@ export default class FilmDetailsView extends AbstractStatefulView {
     this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#addCommentClickHandler);
   };
 
-  shake(element) {
-    element.style.animation = `shake${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+  shakeControl () {
+    const element = this.element.querySelector('.film-details__controls');
+    element.disabled = true;
+    this.shake.call({element}, () => {
+      element.disabled = false;
+    });
   }
 
-  shakeForm() {
+  shakeComment (commentId) {
+    const button = this.element.querySelector(`button[data-id = '${commentId}']`);
+    const element = button.closest('.film-details__comment');
+    this.shake.call({element}, () => {
+      button.innerHTML = 'Delete';
+      button.disabled = false;
+    });
+  }
+
+  shakeForm () {
     const element = this.element.querySelector('.film-details__new-comment');
-    this._state.isDisabled = false;
-    this.shake(element);
-  }
-
-  shakeWatchlistButton() {
-    const element = this.element.querySelector('.film-details__control-button--watchlist');
-    this.shake(element);
-    element.disabled = false;
-  }
-
-  shakeWatchedButton() {
-    const element = this.element.querySelector('.film-details__control-button--watched');
-    this.shake(element);
-    element.disabled = false;
-  }
-
-  shakeFavoriteButton() {
-    const element = this.element.querySelector('.film-details__control-button--favorite');
-    this.shake(element);
-    element.disabled = false;
-  }
+    element.disabled = true;
+    this.shake.call({element}, () => {
+      element.disabled = false;
+    });
+}
 
   #closeClickHandler = (evt) => {
     evt.preventDefault();
@@ -272,20 +269,13 @@ export default class FilmDetailsView extends AbstractStatefulView {
   };
 
   #addCommentClickHandler = (evt) => {
-    if (isCtrlEnter(evt)) {
+    if (isCtrlEnter(evt) && !this.isDisabled) {
       const commentToAdd = {
         comment: he.encode(evt.target.value),
         emotion: this._state.emotion,
       };
-
-      if (this._state.isDisabled === false) {
-        this.updateElement({
-          isDisabled: true
-        });
-      }
-      this._state.isDisabled = false;
-
       this._callback.addCommentClick(commentToAdd);
+      this._state.isDisabled = true;
       this._state.emotion = 'smile';
     }
   };

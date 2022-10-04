@@ -81,11 +81,19 @@ export default class FilmDetailsPresenter {
   };
 
   #deleteCommentHandler = (commentId) => {
-    this.#commentsModel.deleteComment('Minor', commentId);
+    try {
+      this.#commentsModel.deleteComment('Minor', commentId);
+    } catch(err) {
+      this.#filmDetailsComponent.shakeComment(commentId);
+    }
   };
 
   #addCommentHandler = (comment) => {
-    this.#commentsModel.addComment('Minor', comment, this.#film);
+    try {
+      this.#commentsModel.addComment('Minor', comment, this.#film);
+    } catch(err) {
+      this.#filmDetailsComponent.shakeForm();
+    }
   };
 
   #changeData = (film) => {
@@ -100,15 +108,7 @@ export default class FilmDetailsPresenter {
         film: data
       });
     } catch(err) {
-      if (data.userDetails.watchlist) {
-        this.#filmDetailsComponent.shakeWatchlistForm();
-      }
-      else if (data.userDetails.alreadyWatched) {
-        this.#filmDetailsComponent.shakeWatchedForm();
-      }
-      else if (data.userDetails.favorite) {
-        this.#filmDetailsComponent.shakeFavoriteForm();
-      }
+      this.#filmDetailsComponent.shakeControl();
     }
     this.#uiBlocker.unblock();
   };

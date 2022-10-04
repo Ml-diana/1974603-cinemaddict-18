@@ -37,7 +37,6 @@ export default class FilmsModel extends Observable {
     try {
       const response = await this.#filmsApiService.updateFilm(film);
       const updatedFilm = this.#adaptToClient(response);
-
       this.#films = [
         ...this.#films.slice(0, index),
         film,
@@ -51,36 +50,33 @@ export default class FilmsModel extends Observable {
     }
   };
 
-  #adaptToClient = (film) => {
-    const adaptedFilm = {...film,
-      filmInfo: {
-        title: film['film_info']['title'],
-        alternativeTitle: film['film_info']['alternative_title'],
-        rating: film['film_info']['total_rating'],
-        poster: film['film_info']['poster'],
-        ageRating: film['film_info']['age_rating'],
-        director: film['film_info']['director'],
-        writers:film['film_info']['writers'],
-        actors: film['film_info']['actors'],
-        release: {
-          date: film['film_info']['release']['date'],
-          releaseCountry: film['film_info']['release']['release_country'],
-        },
-        runtime: film['film_info']['runtime'],
-        genres: film['film_info']['genre'],
-        description: film['film_info']['description']
+  #adaptToClient = (film) => ({
+    id: film['id'],
+    comments: film['comments'],
+    filmInfo: {
+      title: film['film_info']['title'],
+      alternativeTitle: film['film_info']['alternative_title'],
+      rating: film['film_info']['total_rating'],
+      poster: film['film_info']['poster'],
+      ageRating: film['film_info']['age_rating'],
+      director: film['film_info']['director'],
+      writers:film['film_info']['writers'],
+      actors: film['film_info']['actors'],
+      release: {
+        date: film['film_info']['release']['date'],
+        releaseCountry: film['film_info']['release']['release_country'],
       },
-      userDetails: {
-        watchlist: film['user_details']['watchlist'],
-        alreadyWatched: film['user_details']['already_watched'],
-        watchingDate: film['user_details']['watching_date'] !== null ? new Date(film['user_details']['watching_date']) : film['user_details']['watching_date'],
-        favorite: film['user_details']['favorite'],
-      },
-    };
-    delete adaptedFilm['user_details'];
-    delete adaptedFilm['film_info'];
-    return adaptedFilm;
-  };
+      runtime: film['film_info']['runtime'],
+      genres: film['film_info']['genre'],
+      description: film['film_info']['description']
+    },
+    userDetails: {
+      watchlist: film['user_details']['watchlist'],
+      alreadyWatched: film['user_details']['already_watched'],
+      watchingDate: film['user_details']['watching_date'] !== null ? new Date(film['user_details']['watching_date']) : film['user_details']['watching_date'],
+      favorite: film['user_details']['favorite'],
+    },
+  });
 }
 
 
