@@ -1,12 +1,12 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {formatMinutes, formatDate} from '../utils/utils.js';
+import {formatMinutes, formatDateWithYear} from '../utils/utils.js';
 
 export const createFilmCardTemplate = (film) => `<article class="film-card">
   <a class="film-card__link">
   <h3 class="film-card__title">${film.filmInfo.title}</h3>
   <p class="film-card__rating">${film.filmInfo.rating}</p>
   <p class="film-card__info">
-    <span class="film-card__year">${formatDate(film.filmInfo.release.date)}</span>
+    <span class="film-card__year">${formatDateWithYear(film.filmInfo.release.date)}</span>
     <span class="film-card__duration">${formatMinutes(film.filmInfo.runtime)}</span>
     <span class="film-card__genre">${film.filmInfo.genres[0]}</span>
   </p>

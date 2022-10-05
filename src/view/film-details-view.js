@@ -232,7 +232,7 @@ export default class FilmDetailsView extends AbstractStatefulView {
     this.shake.call({element}, () => {
       element.disabled = false;
     });
-}
+  }
 
   #closeClickHandler = (evt) => {
     evt.preventDefault();
