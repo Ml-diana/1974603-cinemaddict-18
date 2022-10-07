@@ -6,7 +6,7 @@ import he from 'he';
 dayjs.extend(relativeTime);
 
 
-const createFilmDetailsTemplate = ({film, comments, emotion, isDisabled}) => (
+const createFilmDetailsTemplate = ({film, comments, emotion, isDisabled, isDisabledButton}) => (
   `<section class="film-details">
   <div class="film-details__inner">
     <div class="film-details__top-container">
@@ -61,7 +61,7 @@ const createFilmDetailsTemplate = ({film, comments, emotion, isDisabled}) => (
       </tr>
     </table>
     <p class="film-details__film-description">
-     ${film.filmInfo.description}
+     ${film.filmInfo.description.length > 139 ? film.filmInfo.description.slice(0,140).concat('...') : film.filmInfo.description}
     </p>
   </div>
 </div>
@@ -84,7 +84,7 @@ const createFilmDetailsTemplate = ({film, comments, emotion, isDisabled}) => (
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${item.author}</span>
             <span class="film-details__comment-day">${dayjs(item.date).fromNow()}</span>
-            <button class="film-details__comment-delete" data-id="${item.id}" ${isDisabled ? 'disabled' : ''}>Delete</button>
+            <button class="film-details__comment-delete" data-id="${item.id}" ${isDisabledButton ? 'disabled' : ''}>Delete</button>
           </p>
         </div>
       </li>`).join('')}
@@ -142,7 +142,8 @@ export default class FilmDetailsView extends AbstractStatefulView {
       film,
       comments,
       emotion: 'smile',
-      isDisabled: false
+      isDisabled: false,
+      isDisabledButton: false
     };
     this.setEmojiHandler();
     this.setScrollHandler();
@@ -166,6 +167,7 @@ export default class FilmDetailsView extends AbstractStatefulView {
     this.setDeleteCommentHandler(this._callback.deleteCommentClick);
     this.setAddCommentHandler(this._callback.addCommentClick);
     this._state.isDisabled = false;
+    this._state.isDisabledButton = false;
   };
 
   setCloseClickHandler = (callback) => {
@@ -282,8 +284,8 @@ export default class FilmDetailsView extends AbstractStatefulView {
 
   #deleteCommentClickHandler = (evt) => {
     evt.preventDefault();
-    evt.target.disabled = true;
     evt.target.innerHTML = 'Deleting...';
+    evt.target.isDisabledButton = true;
     this._callback.deleteCommentClick(evt.target.dataset['id']);
   };
 }

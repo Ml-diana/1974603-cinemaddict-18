@@ -33,9 +33,6 @@ export default class NavigationListView extends AbstractView {
     if (evt.target.tagName !== 'A') {
       return;
     }
-
-    if (evt.target.dataset.filterType) {
-      this._callback.click(evt.target.dataset.filterType);
-    }
+    this._callback.click(evt.target.dataset.filterType);
   };
 }
