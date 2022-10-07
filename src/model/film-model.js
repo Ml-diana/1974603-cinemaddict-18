@@ -37,7 +37,6 @@ export default class FilmsModel extends Observable {
     try {
       const response = await this.#filmsApiService.updateFilm(film);
       const updatedFilm = this.#adaptToClient(response);
-
       this.#films = [
         ...this.#films.slice(0, index),
         film,

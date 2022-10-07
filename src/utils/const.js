@@ -29,6 +29,5 @@ const TimeLimit = {
 };
 
 const ONE_PART_OF_THE_FILMS = 5;
-const SHAKE_ANIMATION_TIMEOUT = 600;
 
-export {FilterType, SortingType, FilmDetailsMode, TimeLimit, ONE_PART_OF_THE_FILMS, SHAKE_ANIMATION_TIMEOUT};
+export {FilterType, SortingType, FilmDetailsMode, TimeLimit, ONE_PART_OF_THE_FILMS};

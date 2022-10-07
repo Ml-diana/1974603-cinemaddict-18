@@ -67,9 +67,11 @@ export default class FilmsPresenter {
       this.#renderNoFilms();
       return;
     }
+
     if (films.length > ONE_PART_OF_THE_FILMS) {
       render(this.#showMoreButtonComponent, this.#filmListComponent.filmsListElement);
       this.#showMoreButtonComponent.setClickHandler(this.#handleShowMoreButtonClick);
+      this.#isLoading = false;
     }
     for (let i = 0; i < Math.min(films.length, this.#renderedFilmCount); i++) {
       this.#renderFilm(films[i]);
