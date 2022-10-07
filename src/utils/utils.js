@@ -31,5 +31,7 @@ export const sortByDate = (filmA, filmB) => (dayjs(filmB.filmInfo.release.date).
 
 export const sortByRating = (filmA, filmB) => (filmB.filmInfo.rating - filmA.filmInfo.rating);
 
+export const sortByComments = (filmA, filmB) => (filmB.comments.length - filmA.comments.length);
+
 
 export {getRandomInteger, formatDate, formatMinutes, getRandomArrayElement,formatDateWithYear};
