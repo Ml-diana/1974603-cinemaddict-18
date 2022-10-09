@@ -4,7 +4,7 @@ import NoFilmView from '../view/no-film-view.js';
 import SortButtonView from '../view/sort-button-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import FilmCardPresenter from './film-card-presenter.js';
-import {sortByComments, sortByDate, sortByRating} from '../utils/utils.js';
+import {sortByDate, sortByRating} from '../utils/utils.js';
 import {SortingType, ONE_PART_OF_THE_FILMS} from '../utils/const.js';
 import FilmDetailsPresenter from './film-details-presenter.js';
 import FilterPresenter from './filter-presenter.js';
@@ -74,35 +74,14 @@ export default class FilmsPresenter {
       this.#isLoading = false;
     }
     for (let i = 0; i < Math.min(films.length, this.#renderedFilmCount); i++) {
-      const filmCardPresenter = this.#renderFilm(films[i], this.#filmListComponent.filmsListContainerElement);
-      this.#filmCardPresenters.set(films[i].id, filmCardPresenter);
+      this.#renderFilm(films[i]);
     }
   };
 
-  #renderTopRatedFilms = () => {
-    const films = this.#filmsModel.films;
-    if (films.length === 0) {
-      return;
-    }
-    const topRatedFilms = films.sort(sortByRating);
-    this.#renderFilm(topRatedFilms[0], this.#filmListComponent.topRatedFilmsContainerElement);
-    this.#renderFilm(topRatedFilms[1], this.#filmListComponent.topRatedFilmsContainerElement);
-  };
-
-  #renderMostCommentedFilms = () => {
-    const films = this.#filmsModel.films;
-    if (films.length === 0) {
-      return;
-    }
-    const mostCommentedFilms = films.sort(sortByComments);
-    this.#renderFilm(mostCommentedFilms[0], this.#filmListComponent.mostCommentedFilmsContainerElement);
-    this.#renderFilm(mostCommentedFilms[1], this.#filmListComponent.mostCommentedFilmsContainerElement);
-  };
-
-  #renderFilm = (film, element) => {
-    const filmCardPresenter = new FilmCardPresenter(element, this.#filmDetailsPresenter, this.#filmsModel, this.#commentsModel);
+  #renderFilm = (film) => {
+    const filmCardPresenter = new FilmCardPresenter(this.#filmListComponent.filmsListContainerElement, this.#filmDetailsPresenter, this.#filmsModel, this.#commentsModel);
     filmCardPresenter.init(film);
-    return filmCardPresenter;
+    this.#filmCardPresenters.set(film.id, filmCardPresenter);
   };
 
   #handleFilmChange = (updatedFilm) => {
@@ -176,8 +155,6 @@ export default class FilmsPresenter {
         this.#isLoading = false;
         remove(this.#loadingComponent);
         this.#renderFilms();
-        this.#renderTopRatedFilms();
-        this.#renderMostCommentedFilms();
     }
   };
 }
