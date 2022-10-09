@@ -22,5 +22,4 @@ export default class FilmsListView extends AbstractView {
   get filmsListElement() {
     return this.element.querySelector('.films-list');
   }
-
 }
